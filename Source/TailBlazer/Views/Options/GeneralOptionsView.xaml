@@ -1,12 +1,14 @@
-﻿<UserControl x:Class="TailBlazer.Views.Options.GeneralOptionsView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:options="clr-namespace:TailBlazer.Views.Options"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance options:GeneralOptionsViewModel, IsDesignTimeCreatable=False}">
+﻿<UserControl
+    x:Class="TailBlazer.Views.Options.GeneralOptionsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:options="clr-namespace:TailBlazer.Views.Options"
+    d:DataContext="{d:DesignInstance options:GeneralOptionsViewModel,
+                                     IsDesignTimeCreatable=False}"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -18,121 +20,176 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
 
-        <TextBlock  Text="Look And Feel" FontSize="16" FontWeight="SemiBold"/>
+        <TextBlock
+            FontSize="16"
+            FontWeight="SemiBold"
+            Text="Look And Feel" />
         <Grid Grid.Row="1" Margin="8">
             <Grid.Resources>
-                <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MaterialDesignSlider}">
-                    <Setter Property="Width" Value="150"/>
-                    <Setter Property="Margin" Value="6 6 4 6"/>
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Style BasedOn="{StaticResource MaterialDesignSlider}" TargetType="{x:Type Slider}">
+                    <Setter Property="Width" Value="150" />
+                    <Setter Property="Margin" Value="6,6,4,6" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
                 </Style>
                 <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Margin" Value="4 6 4 6"/>
-                </Style> 
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="4,6,4,6" />
+                </Style>
             </Grid.Resources>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="32"/>
+                <RowDefinition Height="32" />
+                <RowDefinition Height="32" />
+                <RowDefinition Height="32" />
+                <RowDefinition Height="32" />
+                <RowDefinition Height="32" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                        Orientation="Horizontal">
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center">Light</TextBlock>
-                <ToggleButton Margin="12 0 16 0" IsChecked="{Binding UseDarkTheme}" HorizontalAlignment="Center" />
+                <ToggleButton
+                    Margin="12,0,16,0"
+                    HorizontalAlignment="Center"
+                    IsChecked="{Binding UseDarkTheme}" />
                 <TextBlock VerticalAlignment="Center">Dark</TextBlock>
             </StackPanel>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Zoom" />
-            <Slider Grid.Row="1"
-                    Grid.Column="1" Minimum="80" Maximum="200"
-                    SmallChange="5"
-                    LargeChange="5"
-                    Value="{Binding Scale}" />
-            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding ScaleText.Value}" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                Text="Zoom" />
+            <Slider
+                Grid.Row="1"
+                Grid.Column="1"
+                LargeChange="5"
+                Maximum="200"
+                Minimum="80"
+                SmallChange="5"
+                Value="{Binding Scale}" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="2"
+                Text="{Binding ScaleText.Value}" />
 
-            <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Highlight Tail?</TextBlock>
-            <CheckBox Grid.Row="2" Grid.Column="1"
-                      VerticalAlignment="Center"
-                      Margin="4"
-                      IsChecked="{Binding  HighlightTail}" />
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="0"
+                VerticalAlignment="Center">
+                Highlight Tail?
+            </TextBlock>
+            <CheckBox
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="4"
+                VerticalAlignment="Center"
+                IsChecked="{Binding HighlightTail}" />
 
-            <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Open Recent Files On Startup?</TextBlock>
-            <CheckBox Grid.Row="3" Grid.Column="1"
-                      VerticalAlignment="Center"
-                      Margin="4"
-                      IsChecked="{Binding  OpenRecentOnStartup}" />
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="0"
+                VerticalAlignment="Center">
+                Open Recent Files On Startup?
+            </TextBlock>
+            <CheckBox
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="4"
+                VerticalAlignment="Center"
+                IsChecked="{Binding OpenRecentOnStartup}" />
 
-            <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Show Line Numbers?</TextBlock>
-            <CheckBox Grid.Row="4" Grid.Column="1"
-                      VerticalAlignment="Center"
-                      Margin="4"
-                      IsChecked="{Binding ShowLineNumbers}" />
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="0"
+                VerticalAlignment="Center">
+                Show Line Numbers?
+            </TextBlock>
+            <CheckBox
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="4"
+                VerticalAlignment="Center"
+                IsChecked="{Binding ShowLineNumbers}" />
 
         </Grid>
 
         <TextBlock
-            Margin="0 8 0 0"
-            Text="Performance" Grid.Row="2" FontSize="16" FontWeight="SemiBold" />
+            Grid.Row="2"
+            Margin="0,8,0,0"
+            FontSize="16"
+            FontWeight="SemiBold"
+            Text="Performance" />
 
-        <Grid Grid.Row="3" Margin="8 8 8 0" Height="32">
+        <Grid
+            Grid.Row="3"
+            Height="32"
+            Margin="8,8,8,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Rate this computer" VerticalAlignment="Center" />
-            <materialDesign:RatingBar Margin="6 0 0 0"
-                                      Grid.Column="1"
-                                      VerticalAlignment="Center"
-                                      Value="{Binding Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      Max="5" />
-            <TextBlock Margin="6 0 0 0" Grid.Column="2" Text="(Reduce for lower CPU usage)" VerticalAlignment="Center" />
+            <TextBlock VerticalAlignment="Center" Text="Rate this computer" />
+            <materialDesign:RatingBar
+                Grid.Column="1"
+                Margin="6,0,0,0"
+                VerticalAlignment="Center"
+                Max="5"
+                Value="{Binding Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Grid.Column="2"
+                Margin="6,0,0,0"
+                VerticalAlignment="Center"
+                Text="(Reduce for lower CPU usage)" />
 
-            <StackPanel Grid.Column="3"
-                        Margin="6 2 4 4"
-                        Visibility="{Binding RequiresRestart.Value, Converter={StaticResource BooleanToVisibilityConverter}}"
-                        HorizontalAlignment="Left" Orientation="Horizontal">
+            <StackPanel
+                Grid.Column="3"
+                Margin="6,2,4,4"
+                HorizontalAlignment="Left"
+                Orientation="Horizontal"
+                Visibility="{Binding RequiresRestart.Value, Converter={StaticResource BooleanToVisibilityConverter}}">
 
-                <Button Style="{StaticResource MaterialDesignFlatButton}"
-                        Command="{Binding RestartCommand}"
-                        HorizontalAlignment="Left"
-                        Margin="0 -2 0 0"
-                        Padding="1 0 1 0">
+                <Button
+                    Margin="0,-2,0,0"
+                    Padding="1,0,1,0"
+                    HorizontalAlignment="Left"
+                    Command="{Binding RestartCommand}"
+                    Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon
-                        Width="22" Height="22"
+                        Width="22"
+                        Height="22"
                         Kind="BackupRestore" />
 
                 </Button>
 
-                <TextBlock Text="Restart to apply"
-                           Margin="4 0 0 0"
-                           FontSize="12"
-                           VerticalAlignment="Center"
-                           Foreground="{DynamicResource MaterialDesignBody}" />
+                <TextBlock
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{DynamicResource MaterialDesignBody}"
+                    Text="Restart to apply" />
             </StackPanel>
 
         </Grid>
@@ -152,27 +209,34 @@
             </Grid.ColumnDefinitions>
 
 
-            <TextBlock Grid.Row="1" Grid.Column="0"
-                       Visibility="Collapsed"
-                       VerticalAlignment="Center">
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Visibility="Collapsed">
                 Highlight Duration
             </TextBlock>
 
-            <Slider Grid.Row="1" Grid.Column="1" Minimum="0.25" Maximum="10"
-                    Margin="6 4 4 4"
+            <Slider
+                Grid.Row="1"
+                Grid.Column="1"
+                Width="200"
+                Margin="6,4,4,4"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                LargeChange="1"
+                Maximum="10"
+                Minimum="0.25"
+                SmallChange="0.25"
+                Visibility="Collapsed"
+                Value="{Binding HighlightDuration}" />
 
-                    Visibility="Collapsed"
-                    Width="200"
-                    SmallChange="0.25"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Left"
-                    LargeChange="1"
-                    Value="{Binding HighlightDuration}" />
-
-            <TextBlock Grid.Row="1" Grid.Column="2"
-                       Visibility="Collapsed"
-                       VerticalAlignment="Center"
-                       Text="{Binding HighlightDurationText.Value}" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                Text="{Binding HighlightDurationText.Value}"
+                Visibility="Collapsed" />
 
         </Grid>
 

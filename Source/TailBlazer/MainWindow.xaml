@@ -38,15 +38,6 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/controls.buttons.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Font.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/MaterialDesign.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-            <infrastucture:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
-
             <DataTemplate DataType="{x:Type infrastucture:FileHeader}">
                 <TextBlock
                     Margin="6,2,2,2"
@@ -54,9 +45,7 @@
                     Text="{Binding DisplayName}"
                     ToolTip="{Binding FullName}"
                     ToolTipService.ShowOnDisabled="True" />
-
             </DataTemplate>
-
             <DataTemplate DataType="{x:Type infrastucture:HeaderedView}">
                 <ContentControl Content="{Binding Content}">
                     <ContentControl.LayoutTransform>
@@ -66,7 +55,6 @@
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
-
     <Window.InputBindings>
         <KeyBinding
             Key="O"
@@ -74,7 +62,6 @@
             Modifiers="Ctrl" />
         <KeyBinding Key="F8" Command="{Binding CollectMemoryCommand}" />
     </Window.InputBindings>
-
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <StackPanel Orientation="Horizontal">
@@ -82,14 +69,12 @@
                     VerticalAlignment="Center"
                     Opacity="0.6"
                     Text="{Binding Version}" />
-
                 <materialDesign:PopupBox
                     Height="22"
                     Margin="0,0,-6,0"
                     VerticalAlignment="Center"
                     Visibility="Visible">
                     <StackPanel Margin="2" Orientation="Vertical">
-
                         <Button
                             Margin="6,0,0,0"
                             Command="{Binding ExitCommmand}"
@@ -103,23 +88,19 @@
                             </StackPanel>
                         </Button>
                     </StackPanel>
-
                 </materialDesign:PopupBox>
             </StackPanel>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
-
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
             <StackPanel Orientation="Horizontal">
-
                 <ToggleButton
                     x:Name="MenuToggleButton"
                     Width="24"
                     Height="24"
                     IsChecked="{Binding MenuIsOpen}"
                     Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
-
                 <Button Command="{Binding ShowInGitHubCommand}" ToolTip="Tail Blazer on GitHub">
                     <Rectangle
                         Width="22"
@@ -144,7 +125,6 @@
                         </Rectangle.OpacityMask>
                     </Rectangle>
                 </Button>
-
                 <Button
                     Command="{Binding OpenFileCommand}"
                     ToolTip="Open file"
@@ -155,14 +135,10 @@
                         Foreground="White" />
                 </Button>
             </StackPanel>
-
         </controls:WindowCommands>
     </controls:MetroWindow.LeftWindowCommands>
-
-
     <AdornerDecorator>
         <materialDesign:DialogHost Identifier="{x:Static tailBlazer:DialogNames.EntireWindow}">
-
             <Grid infrastucture:DependencyObjectHook.Receiver="{Binding DropMonitor}">
                 <Grid.InputBindings>
                     <MouseBinding Command="{Binding ZoomInCommand}" Gesture="{x:Static infrastucture:MouseWheelGesture.ControlDown}" />
@@ -170,25 +146,19 @@
                 </Grid.InputBindings>
                 <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
                     <materialDesign:DrawerHost.LeftDrawerContent>
-
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-
                             <options:GeneralOptionsView Margin="6,12,6,0" DataContext="{Binding GeneralOptions}" />
-
                             <recent:RecentFilesView
                                 Grid.Row="1"
                                 Margin="6,12,6,0"
                                 DataContext="{Binding RecentFiles}" />
                         </Grid>
-
                     </materialDesign:DrawerHost.LeftDrawerContent>
-
                     <Grid>
-
                         <dockablz:Layout x:Name="Layout">
                             <dragablz:TabablzControl
                                 x:Name="InitialTabablzControl"
@@ -200,13 +170,11 @@
                                 SelectedItem="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 ShowDefaultCloseButton="True"
                                 TextElement.Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=(TextElement.Foreground)}">
-
                                 <dragablz:TabablzControl.InterTabController>
                                     <dragablz:InterTabController InterTabClient="{Binding InterTabClient}" />
                                 </dragablz:TabablzControl.InterTabController>
                             </dragablz:TabablzControl>
                         </dockablz:Layout>
-
                         <StackPanel
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -231,7 +199,6 @@
                         </StackPanel>
                     </Grid>
                 </materialDesign:DrawerHost>
-
             </Grid>
         </materialDesign:DialogHost>
     </AdornerDecorator>
