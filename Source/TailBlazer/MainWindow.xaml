@@ -151,7 +151,9 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
+                            <!--  setting  -->
                             <options:GeneralOptionsView Margin="6,12,6,0" DataContext="{Binding GeneralOptions}" />
+                            <!--  recent files  -->
                             <recent:RecentFilesView
                                 Grid.Row="1"
                                 Margin="6,12,6,0"
