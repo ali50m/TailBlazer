@@ -1,11 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows</TargetFramework>
-		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
-		<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
 		<ApplicationIcon>tailblazer.ico</ApplicationIcon>
 	</PropertyGroup>    
 	
@@ -16,13 +12,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Dragablz" Version="0.0.3.223" />
-	  <PackageReference Include="log4net" Version="2.0.14" />
-	  <PackageReference Include="MahApps.Metro" Version="2.4.9" />
-	  <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
-	  <PackageReference Include="StructureMap" Version="4.7.1" />
-	  <PackageReference Include="System.Reactive" Version="5.0.0" />
-	  <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+	  <PackageReference Include="Dragablz" />
+	  <PackageReference Include="log4net" />
+	  <PackageReference Include="MahApps.Metro" />
+	  <PackageReference Include="MaterialDesignThemes" />
+	  <PackageReference Include="StructureMap" />
+	  <PackageReference Include="System.Reactive" />
+	  <PackageReference Include="System.Reflection.Emit.Lightweight" />
 	</ItemGroup>
 
 	<ItemGroup>

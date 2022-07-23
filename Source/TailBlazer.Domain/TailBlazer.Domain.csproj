@@ -1,17 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
-		<Nullable>disable</Nullable>
-		<LangVersion>latest</LangVersion>
 		<UseWPF>true</UseWPF>
-		<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
 	</PropertyGroup>
+
 	<ItemGroup>
-	  <PackageReference Include="DynamicData" Version="7.9.7" />
-	  <PackageReference Include="System.Reactive.Core" Version="5.0.0" />
-	  <PackageReference Include="System.Reactive.Interfaces" Version="5.0.0" />
-	  <PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
-	  <PackageReference Include="System.Reactive.PlatformServices" Version="5.0.0" />
-	  <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+	  <PackageReference Include="DynamicData" />
+	  <PackageReference Include="System.Reactive.Core" />
+	  <PackageReference Include="System.Reactive.Interfaces" />
+	  <PackageReference Include="System.Reactive.Linq" />
+	  <PackageReference Include="System.Reactive.PlatformServices" />
+	  <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
 	</ItemGroup>
 </Project>
