@@ -24,7 +24,7 @@ public class MatchedStringEnumerator2 :IEnumerable<MatchedString>
     public IEnumerator<MatchedString> GetEnumerator()
     {
         var strings = _itemsToMatch.AsArray();
-        var matches = new MatchedString[0];
+        var matches = Array.Empty<MatchedString>();
         for(var i = 0; i < strings.Length; i++)
         {
             var stringToMatch = strings[i];
@@ -51,12 +51,12 @@ public class MatchedStringEnumerator2 :IEnumerable<MatchedString>
         return GetEnumerator();
     }
 
-    private IEnumerable<MatchedString> Yield(string input, string tomatch)
+    private IEnumerable<MatchedString> Yield(string input, string toMatch)
     {
         if(string.IsNullOrEmpty(input))
             yield break;
 
-        var pattern = "(" + Regex.Escape(tomatch) + ")";
+        var pattern = "(" + Regex.Escape(toMatch) + ")";
         var split = Regex.Split(input, pattern, RegexOptions.IgnoreCase);
         var length = split.Length;
 
@@ -70,7 +70,7 @@ public class MatchedStringEnumerator2 :IEnumerable<MatchedString>
 
         foreach(var item in split)
         {
-            if(item.Equals(tomatch, StringComparison.OrdinalIgnoreCase))
+            if(item.Equals(toMatch, StringComparison.OrdinalIgnoreCase))
             {
                 yield return new MatchedString(item, _tomatch);
             }
@@ -86,7 +86,6 @@ public class MatchedStringEnumerator :IEnumerable<MatchedString>
 {
     private readonly string _input;
     private readonly IEnumerable<string> _itemsToMatch;
-    private readonly string _textToMatch;
 
     public MatchedStringEnumerator(string input, string textToMatch)
     {
@@ -104,36 +103,26 @@ public class MatchedStringEnumerator :IEnumerable<MatchedString>
 
     public IEnumerator<MatchedString> GetEnumerator()
     {
-        if(_textToMatch != null)
+        var strings = _itemsToMatch.AsArray();
+        var matches = new MatchedString[0];
+        for(var i = 0; i < strings.Length; i++)
         {
-            foreach(var result in Yield(_input, _textToMatch))
+            var stringToMatch = strings[i];
+            if(i == 0)
             {
-                yield return result;
+                matches = Yield(_input, stringToMatch).ToArray();
+            }
+            else
+            {
+                matches = matches.SelectMany(ms => ms.IsMatch
+                    ? new[] {ms}
+                    : Yield(ms.Part, stringToMatch)).ToArray();
             }
         }
-        else
-        {
-            var strings = _itemsToMatch.AsArray();
-            var matches = new MatchedString[0];
-            for(var i = 0; i < strings.Length; i++)
-            {
-                var stringToMatch = strings[i];
-                if(i == 0)
-                {
-                    matches = Yield(_input, stringToMatch).ToArray();
-                }
-                else
-                {
-                    matches = matches.SelectMany(ms => ms.IsMatch
-                        ? new[] {ms}
-                        : Yield(ms.Part, stringToMatch)).ToArray();
-                }
-            }
 
-            foreach(var matchedString in matches)
-            {
-                yield return matchedString;
-            }
+        foreach(var matchedString in matches)
+        {
+            yield return matchedString;
         }
     }
 
