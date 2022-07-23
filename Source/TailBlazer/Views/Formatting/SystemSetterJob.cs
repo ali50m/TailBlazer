@@ -30,7 +30,7 @@ public sealed class SystemSetterJob :IDisposable
                 var paletteHelper = new PaletteHelper();
 
                 var t = paletteHelper.GetTheme();
-                t.SetBaseTheme(Theme.Dark);
+                t.SetBaseTheme(dark ? Theme.Dark : Theme.Light);
                 paletteHelper.SetTheme(t);
                 //paletteHelper.ReplaceAccentColor(theme.GetAccentColor());
             });
