@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reactive.Linq;
 using FluentAssertions;
@@ -64,6 +65,7 @@ public class FileTailerFixture
     //}
 
     [Fact]
+    [Obsolete("Obsolete")]
     public void AutoTailWithFilter()
     {
         var scheduler = new TestScheduler();

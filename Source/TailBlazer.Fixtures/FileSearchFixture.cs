@@ -168,6 +168,7 @@ public class FileSearchFixture
     }
 
     [Fact]
+    [Obsolete("Obsolete")]
     public void CanReadLinesBackInLargeFile()
     {
         var scheduler = new TestScheduler();
