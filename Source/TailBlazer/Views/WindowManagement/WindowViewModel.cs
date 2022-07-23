@@ -11,6 +11,7 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using Dragablz;
 using DynamicData;
 using DynamicData.Binding;
@@ -41,12 +42,12 @@ public class WindowViewModel :AbstractNotifyPropertyChanged, IDisposable, IViewO
     public GeneralOptionsViewModel GeneralOptions { get; }
     public IInterTabClient InterTabClient { get; }
     public ICommand OpenFileCommand { get; }
-    public Command ShowInGitHubCommand { get; }
+    public ICommand ShowInGitHubCommand { get; }
     public string Version { get; }
     public ICommand ExitCommmand { get; }
     public ICommand ZoomInCommand { get; }
     public ICommand ZoomOutCommand { get; }
-    public Command CollectMemoryCommand { get; }
+    public ICommand CollectMemoryCommand { get; }
 
     public FileDropMonitor DropMonitor { get; } = new FileDropMonitor();
     public ItemActionCallback ClosingTabItemHandler => ClosingTabItemHandlerImpl;
@@ -86,22 +87,22 @@ public class WindowViewModel :AbstractNotifyPropertyChanged, IDisposable, IViewO
         _schedulerProvider = schedulerProvider;
         _objectProvider = objectProvider;
         InterTabClient = new InterTabClient(windowFactory);
-        OpenFileCommand = new Command(OpenFile);
+        OpenFileCommand = new RelayCommand(OpenFile);
 
-        ShowInGitHubCommand = new Command(() => Process.Start(new ProcessStartInfo
+        ShowInGitHubCommand = new RelayCommand(() => Process.Start(new ProcessStartInfo
         {
             FileName = "https://github.com/RolandPheasant", UseShellExecute = true
         }));
-        ZoomOutCommand = new Command(() => { GeneralOptions.Scale = GeneralOptions.Scale + 5; });
-        ZoomInCommand = new Command(() => { GeneralOptions.Scale = GeneralOptions.Scale - 5; });
-        CollectMemoryCommand = new Command(() =>
+        ZoomOutCommand = new RelayCommand(() => { GeneralOptions.Scale = GeneralOptions.Scale + 5; });
+        ZoomInCommand = new RelayCommand(() => { GeneralOptions.Scale = GeneralOptions.Scale - 5; });
+        CollectMemoryCommand = new RelayCommand(() =>
         {
             //Diagnostics [useful for memory testing]
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
         });
-        ExitCommmand = new Command(() =>
+        ExitCommmand = new RelayCommand(() =>
         {
             applicationStatePublisher.Publish(ApplicationState.ShuttingDown);
             Application.Current.Shutdown();

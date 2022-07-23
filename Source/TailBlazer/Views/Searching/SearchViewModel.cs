@@ -2,10 +2,10 @@ using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData.Binding;
 using TailBlazer.Domain.FileHandling;
 using TailBlazer.Domain.FileHandling.Search;
-using TailBlazer.Infrastucture;
 
 namespace TailBlazer.Views.Searching;
 
@@ -65,7 +65,7 @@ public class SearchViewModel :AbstractNotifyPropertyChanged, IDisposable
     public SearchViewModel(SearchInfo info, Action<SearchViewModel> removeAction)
     {
         _info = info;
-        RemoveCommand = new Command(() => removeAction(this));
+        RemoveCommand = new RelayCommand(() => removeAction(this));
         var counter = _info.Latest
             .Select(lp => lp.Count)
             .Subscribe(count => Count = count);

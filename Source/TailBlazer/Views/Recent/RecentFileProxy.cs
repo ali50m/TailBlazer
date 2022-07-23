@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData.Binding;
 using TailBlazer.Domain.FileHandling.Recent;
-using TailBlazer.Infrastucture;
 
 namespace TailBlazer.Views.Recent;
 
@@ -29,8 +29,8 @@ public class RecentFileProxy :AbstractNotifyPropertyChanged, IEquatable<RecentFi
     {
         _recentFile = recentFile;
 
-        OpenCommand = new Command(() => openAction(recentFile));
-        RemoveCommand = new Command(() => removeAction(recentFile));
+        OpenCommand = new RelayCommand(() => openAction(recentFile));
+        RemoveCommand = new RelayCommand(() => removeAction(recentFile));
     }
 
     public override string ToString()

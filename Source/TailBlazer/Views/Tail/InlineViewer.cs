@@ -5,6 +5,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using DynamicData.Binding;
 using TailBlazer.Domain.Annotations;
@@ -42,7 +43,7 @@ public class InlineViewer :AbstractNotifyPropertyChanged, ILinesVisualisation
         if(themeProvider == null) throw new ArgumentNullException(nameof(themeProvider));
         SelectionMonitor = selectionMonitor ?? throw new ArgumentNullException(nameof(selectionMonitor));
         CopyToClipboardCommand =
-            new Command(() => clipboardHandler.WriteToClipboard(selectionMonitor.GetSelectedText()));
+            new RelayCommand(() => clipboardHandler.WriteToClipboard(selectionMonitor.GetSelectedText()));
 
         _isSettingScrollPosition = false;
         var pageSize = this.WhenValueChanged(vm => vm.PageSize);

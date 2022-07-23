@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using DynamicData.Binding;
 using TailBlazer.Domain.Annotations;
@@ -123,14 +124,14 @@ public class TailViewModel :AbstractNotifyPropertyChanged, ILinesVisualisation, 
         SearchHints = searchHints ?? throw new ArgumentNullException(nameof(searchHints));
 
         CopyToClipboardCommand =
-            new Command(() => clipboardHandler.WriteToClipboard(selectionMonitor.GetSelectedText()));
-        OpenFileCommand = new Command(() => Process.Start(fileWatcher.FullName));
-        OpenFolderCommand = new Command(() => Process.Start(fileWatcher.Folder));
-        CopyPathToClipboardCommand = new Command(() => clipboardHandler.WriteToClipboard(fileWatcher.FullName));
-        UnClearCommand = new Command(fileWatcher.Reset);
-        ClearCommand = new Command(fileWatcher.Clear);
-        KeyAutoTail = new Command(() => { AutoTail = true; });
-        OpenSearchOptionsCommand = new Command(async () =>
+            new RelayCommand(() => clipboardHandler.WriteToClipboard(selectionMonitor.GetSelectedText()));
+        OpenFileCommand = new RelayCommand(() => Process.Start(fileWatcher.FullName));
+        OpenFolderCommand = new RelayCommand(() => Process.Start(fileWatcher.Folder));
+        CopyPathToClipboardCommand = new RelayCommand(() => clipboardHandler.WriteToClipboard(fileWatcher.FullName));
+        UnClearCommand = new RelayCommand(fileWatcher.Reset);
+        ClearCommand = new RelayCommand(fileWatcher.Clear);
+        KeyAutoTail = new RelayCommand(() => { AutoTail = true; });
+        OpenSearchOptionsCommand = new RelayCommand(async () =>
         {
             await Task.Run(() =>
             {

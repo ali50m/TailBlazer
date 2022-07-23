@@ -6,11 +6,11 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using DynamicData.Binding;
 using TailBlazer.Domain.FileHandling.Search;
 using TailBlazer.Domain.Infrastructure;
-using TailBlazer.Infrastucture;
 using TailBlazer.Views.Recent;
 
 namespace TailBlazer.Views.Searching;
@@ -74,7 +74,7 @@ public class SearchHints :AbstractNotifyPropertyChanged, IDisposable, IDataError
         //Handle adding new search
         var searchRequested = new Subject<SearchRequest>();
         SearchRequested = searchRequested.AsObservable();
-        AddSearchCommand = new Command(async () =>
+        AddSearchCommand = new RelayCommand(async () =>
         {
             await Task.Run(() =>
             {

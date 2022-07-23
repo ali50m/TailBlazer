@@ -12,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Mvvm" />
 	  <PackageReference Include="Dragablz" />
 	  <PackageReference Include="log4net" />
 	  <PackageReference Include="MahApps.Metro" />

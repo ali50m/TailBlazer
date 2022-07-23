@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData.Binding;
 using DynamicData.Kernel;
 using MaterialDesignThemes.Wpf;
@@ -12,7 +13,6 @@ using TailBlazer.Domain.Annotations;
 using TailBlazer.Domain.FileHandling.Search;
 using TailBlazer.Domain.Formatting;
 using TailBlazer.Domain.Infrastructure;
-using TailBlazer.Infrastucture;
 
 namespace TailBlazer.Views.Searching;
 
@@ -36,7 +36,7 @@ public class SearchOptionsProxy :AbstractNotifyPropertyChanged, IDisposable, IEq
     public string ChangeScopeToolTip => IsGlobal ? "Change to local scope" : "Change to global scope";
     public ICommand RemoveCommand { get; }
     public ICommand HighlightCommand { get; }
-    public Command ChangeScopeCommand { get; }
+    public ICommand ChangeScopeCommand { get; }
     public IEnumerable<Hue> Hues { get; }
     public ICommand ShowIconSelectorCommand { get; }
     private IconSelector IconSelector { get; }
@@ -122,10 +122,10 @@ public class SearchOptionsProxy :AbstractNotifyPropertyChanged, IDisposable, IEq
         IsGlobal = searchMetadata.IsGlobal;
         IsExclusion = searchMetadata.IsExclusion;
 
-        ShowIconSelectorCommand = new Command(async () => await ShowIconSelector());
-        RemoveCommand = new Command(() => removeAction(searchMetadata));
-        ChangeScopeCommand = new Command(() => changeScopeAction((SearchMetadata) this));
-        HighlightCommand = new Command<Hue>(newHue => { HighlightHue = newHue; });
+        ShowIconSelectorCommand = new RelayCommand(async () => await ShowIconSelector());
+        RemoveCommand = new RelayCommand(() => removeAction(searchMetadata));
+        ChangeScopeCommand = new RelayCommand(() => changeScopeAction((SearchMetadata) this));
+        HighlightCommand = new RelayCommand<Hue>(newHue => { HighlightHue = newHue; });
 
         IconKind = _searchMetadata.IconKind.ParseEnum<PackIconKind>()
             .ValueOr(() => PackIconKind.ArrowRightBold);

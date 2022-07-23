@@ -1,5 +1,6 @@
 <Project>
     <ItemGroup>
+	    <PackageReference Update="CommunityToolkit.Mvvm" Version="7.1.2" />
 	    <PackageReference Update="Dragablz" Version="0.0.3.223" />
 	    <PackageReference Update="DynamicData" Version="7.9.7" />
 	    <PackageReference Update="FluentAssertions" Version="6.7.0" />

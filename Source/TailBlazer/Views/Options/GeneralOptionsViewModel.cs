@@ -4,11 +4,11 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData.Binding;
 using TailBlazer.Domain.Formatting;
 using TailBlazer.Domain.Infrastructure;
 using TailBlazer.Domain.Settings;
-using TailBlazer.Infrastucture;
 
 namespace TailBlazer.Views.Options;
 
@@ -93,7 +93,7 @@ public sealed class GeneralOptionsViewModel :AbstractNotifyPropertyChanged, IDis
             .HasChanged()
             .ForBinding();
 
-        RestartCommand = new Command(() =>
+        RestartCommand = new RelayCommand(() =>
         {
             Process.Start(Application.ResourceAssembly.Location);
             Application.Current.Shutdown();
