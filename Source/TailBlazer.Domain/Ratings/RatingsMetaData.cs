@@ -1,4 +1,4 @@
-﻿namespace TailBlazer.Domain.Settings;
+namespace TailBlazer.Domain.Ratings;
 
 public class RatingsMetaData
 {

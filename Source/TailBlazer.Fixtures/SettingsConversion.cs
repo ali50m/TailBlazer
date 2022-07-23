@@ -5,7 +5,7 @@ using FluentAssertions;
 using TailBlazer.Domain.FileHandling.Recent;
 using TailBlazer.Domain.Formatting;
 using TailBlazer.Domain.Settings;
-using TailBlazer.Views.Tail;
+using TailBlazer.Views.Searching;
 using Xunit;
 
 namespace TailBlazer.Fixtures;

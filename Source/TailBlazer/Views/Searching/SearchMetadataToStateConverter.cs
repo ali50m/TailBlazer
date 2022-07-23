@@ -4,9 +4,8 @@ using System.Xml.Linq;
 using DynamicData.Kernel;
 using TailBlazer.Domain.Infrastructure;
 using TailBlazer.Domain.Settings;
-using TailBlazer.Views.Searching;
 
-namespace TailBlazer.Views.Tail;
+namespace TailBlazer.Views.Searching;
 
 public class SearchMetadataToStateConverter :IConverter<SearchState[]>
 {

@@ -6,12 +6,13 @@ using TailBlazer.Domain.FileHandling.Search;
 using TailBlazer.Domain.Formatting;
 using TailBlazer.Domain.Infrastructure;
 using TailBlazer.Domain.Settings;
+using TailBlazer.Infrastucture;
 using TailBlazer.Infrastucture.AppState;
 using TailBlazer.Infrastucture.KeyboardNavigation;
 using TailBlazer.Views.Options;
 using TailBlazer.Views.Tail;
 
-namespace TailBlazer.Infrastucture;
+namespace TailBlazer;
 
 internal class AppRegistry :Registry
 {
