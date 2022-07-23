@@ -15,8 +15,7 @@
 	  <PackageReference Include="CommunityToolkit.Mvvm" />
 	  <PackageReference Include="Dragablz" />
 	  <PackageReference Include="log4net" />
-	  <PackageReference Include="MahApps.Metro" />
-	  <PackageReference Include="MaterialDesignThemes" />
+	  <PackageReference Include="MaterialDesignThemes.MahApps" />
 	  <PackageReference Include="StructureMap" />
 	  <PackageReference Include="System.Reflection.Emit.Lightweight" />
 	</ItemGroup>
