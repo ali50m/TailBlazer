@@ -77,7 +77,7 @@
                     <StackPanel Margin="2" Orientation="Vertical">
                         <Button
                             Margin="6,0,0,0"
-                            Command="{Binding ExitCommmand}"
+                            Command="{Binding ExitCommand}"
                             ToolTip="Exit Tail Blazer">
                             <StackPanel Orientation="Horizontal">
                                 <controls1:ExitIcon Width="18" Height="18" />

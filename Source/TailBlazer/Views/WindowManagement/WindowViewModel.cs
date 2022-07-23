@@ -44,7 +44,7 @@ public class WindowViewModel :AbstractNotifyPropertyChanged, IDisposable, IViewO
     public ICommand OpenFileCommand { get; }
     public ICommand ShowInGitHubCommand { get; }
     public string Version { get; }
-    public ICommand ExitCommmand { get; }
+    public ICommand ExitCommand { get; }
     public ICommand ZoomInCommand { get; }
     public ICommand ZoomOutCommand { get; }
     public ICommand CollectMemoryCommand { get; }
@@ -102,7 +102,7 @@ public class WindowViewModel :AbstractNotifyPropertyChanged, IDisposable, IViewO
             GC.WaitForPendingFinalizers();
             GC.Collect();
         });
-        ExitCommmand = new RelayCommand(() =>
+        ExitCommand = new RelayCommand(() =>
         {
             applicationStatePublisher.Publish(ApplicationState.ShuttingDown);
             Application.Current.Shutdown();
