@@ -3,6 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<UseWPF>true</UseWPF>
 		<ApplicationIcon>tailblazer.ico</ApplicationIcon>
+		<AssemblyVersion>6.0.1</AssemblyVersion>
 	</PropertyGroup>    
 	
 	<ItemGroup>
