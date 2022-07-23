@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace TailBlazer.Views.Searching;
 
@@ -16,5 +17,10 @@ public class SearchHintMessage :INotifyPropertyChanged
     }
 
     //implemented to prevent memory leaks
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+    }
 }
