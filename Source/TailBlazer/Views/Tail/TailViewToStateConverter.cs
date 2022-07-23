@@ -4,79 +4,79 @@ using TailBlazer.Domain.FileHandling.Search;
 using TailBlazer.Domain.Settings;
 using TailBlazer.Views.Searching;
 
-namespace TailBlazer.Views.Tail
+namespace TailBlazer.Views.Tail;
+
+public class TailViewToStateConverter :IConverter<TailViewState>
 {
-    public class TailViewToStateConverter : IConverter<TailViewState>
+    private static readonly SearchMetadataToStateConverter SearchMetadataToStateConverter =
+        new SearchMetadataToStateConverter();
+
+    public TailViewState Convert(State state)
     {
-        private static readonly SearchMetadataToStateConverter SearchMetadataToStateConverter = new SearchMetadataToStateConverter();
+        if(state == null || state == State.Empty)
+            return GetDefaultValue();
 
-        private static class Structure
-        {
-            public const string Root = "TailView";
+        var doc = XDocument.Parse(state.Value);
 
-            public const string FileName = "FileName";
-            public const string SelectedFilter = "SelectedSearch";
-        }
+        var root = doc.ElementOrThrow(Structure.Root);
+        var filename = root.ElementOrThrow(Structure.FileName);
+        var selectedFilter = root.ElementOrThrow(Structure.SelectedFilter);
 
-        //convert from the view model values
+        var searchStates = SearchMetadataToStateConverter.Convert(root);
+        return new TailViewState(filename, selectedFilter, searchStates);
+    }
 
-        public State Convert(string fileName, string selectedSearch, SearchMetadata[] items)
-        {
-            var searchItems = items
-                .OrderBy(s => s.Position)
-                .Select(search => new SearchState
-                    (
-                        search.SearchText,
-                        search.Position,
-                        search.UseRegex,
-                        search.Highlight,
-                        search.Filter,
-                        false,
-                        search.IgnoreCase,
-                        search.HighlightHue.Swatch,
-                        search.IconKind,
-                        search.HighlightHue.Name,
-                        search.IsExclusion
-                    )).ToArray();
+    public State Convert(TailViewState state)
+    {
+        if(state == null || state == TailViewState.Empty)
+            return State.Empty;
 
-            var tailViewState = new TailViewState(fileName, selectedSearch, searchItems);
-            return Convert(tailViewState);
-        }
+        var root = new XElement(new XElement(Structure.Root));
+        root.Add(new XElement(Structure.FileName, state.FileName));
+        root.Add(new XElement(Structure.SelectedFilter, state.SelectedSearch));
 
-        public TailViewState Convert(State state)
-        {
-            if (state == null || state == State.Empty)
-                return GetDefaultValue();
+        var list = SearchMetadataToStateConverter.ConvertToElement(state.SearchItems.ToArray());
+        root.Add(list);
 
-            var doc = XDocument.Parse(state.Value);
+        var doc = new XDocument(root);
+        return new State(1, doc.ToString());
+    }
 
-            var root = doc.ElementOrThrow(Structure.Root);
-            var filename = root.ElementOrThrow(Structure.FileName);
-            var selectedFilter = root.ElementOrThrow(Structure.SelectedFilter);
+    public TailViewState GetDefaultValue()
+    {
+        return TailViewState.Empty;
+    }
 
-            var searchStates = SearchMetadataToStateConverter.Convert(root);
-            return new TailViewState(filename, selectedFilter, searchStates);
-        }
+    //convert from the view model values
 
-        public State Convert(TailViewState state)
-        {
-            if (state == null || state == TailViewState.Empty)
-                return State.Empty;
+    public State Convert(string fileName, string selectedSearch, SearchMetadata[] items)
+    {
+        var searchItems = items
+            .OrderBy(s => s.Position)
+            .Select(search => new SearchState
+            (
+                search.SearchText,
+                search.Position,
+                search.UseRegex,
+                search.Highlight,
+                search.Filter,
+                false,
+                search.IgnoreCase,
+                search.HighlightHue.Swatch,
+                search.IconKind,
+                search.HighlightHue.Name,
+                search.IsExclusion
+            )).ToArray();
 
-            var root = new XElement(new XElement(Structure.Root));
-            root.Add(new XElement(Structure.FileName, state.FileName));
-            root.Add(new XElement(Structure.SelectedFilter, state.SelectedSearch));
+        var tailViewState = new TailViewState(fileName, selectedSearch, searchItems);
+        return Convert(tailViewState);
+    }
 
-            var list = SearchMetadataToStateConverter.ConvertToElement(state.SearchItems.ToArray());
-            root.Add(list);
+    private static class Structure
+    {
+        public const string Root = "TailView";
 
-            var doc = new XDocument(root);
-            return new State(1, doc.ToString());
-        }
-
-        public TailViewState GetDefaultValue()
-        {
-            return TailViewState.Empty;
-        }
+        public const string FileName = "FileName";
+        public const string SelectedFilter = "SelectedSearch";
     }
 }

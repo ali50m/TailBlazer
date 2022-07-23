@@ -3,83 +3,82 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace TailBlazer.Infrastucture
+namespace TailBlazer.Infrastucture;
+
+public class InvertedBooleanToVisibilityConverter :IValueConverter
 {
-    public class InvertedBooleanToVisibilityConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo language)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo language)
-        {
-            return (value is bool && (bool)value) ? Visibility.Collapsed : Visibility.Visible;
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo language)
-        {
-            return value is Visibility && (Visibility)value == Visibility.Collapsed;
-        }
+        return (value is bool && (bool) value) ? Visibility.Collapsed : Visibility.Visible;
     }
 
-    public class BooleanToVisibilityConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo language)
     {
-    
+        return value is Visibility && (Visibility) value == Visibility.Collapsed;
+    }
+}
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo language)
-        {
-            return (value is bool && (bool)value) ? Visibility.Visible : Visibility.Collapsed;
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo language)
-        {
-            return value is Visibility && (Visibility)value == Visibility.Visible;
-        }
+public class BooleanToVisibilityConverter :IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo language)
+    {
+        return (value is bool && (bool) value) ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    public class BooleanToHiddenConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo language)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo language)
-        {
-            return (value is bool && (bool)value) ? Visibility.Visible : Visibility.Hidden;
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo language)
-        {
-            return value is Visibility && (Visibility)value == Visibility.Hidden;
-        }
+        return value is Visibility && (Visibility) value == Visibility.Visible;
+    }
+}
+
+public class BooleanToHiddenConverter :IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo language)
+    {
+        return (value is bool && (bool) value) ? Visibility.Visible : Visibility.Hidden;
     }
 
-
-    public class EqualityToBooleanConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo language)
     {
-        public object Convert(object value, Type targetType, object parameter,CultureInfo culture)
-        {
-            return value.Equals(parameter);
-        }
+        return value is Visibility && (Visibility) value == Visibility.Hidden;
+    }
+}
 
-        public object ConvertBack(object value, Type targetType, object parameter,CultureInfo culture)
-        {
-            return value.Equals(true) ? parameter : Binding.DoNothing;
-        }
+public class EqualityToBooleanConverter :IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return value.Equals(parameter);
     }
 
-    public class EqualsToVisibilityConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value.Equals(parameter) ? Visibility.Visible : Visibility.Collapsed;
-        }
+        return value.Equals(true) ? parameter : Binding.DoNothing;
+    }
+}
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return Binding.DoNothing;
-        }
+public class EqualsToVisibilityConverter :IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return value.Equals(parameter) ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    public class NotEqualsToVisibilityConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return !value.Equals(parameter) ? Visibility.Visible : Visibility.Collapsed;
-        }
+        return Binding.DoNothing;
+    }
+}
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return Binding.DoNothing;
-        }
+public class NotEqualsToVisibilityConverter :IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return !value.Equals(parameter) ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return Binding.DoNothing;
     }
 }

@@ -1,11 +1,9 @@
-﻿
-using TailBlazer.Views;
+﻿using TailBlazer.Views;
 
-namespace TailBlazer.Infrastucture
+namespace TailBlazer.Infrastucture;
+
+public interface IViewFactoryRegister
 {
-    public interface IViewFactoryRegister
-    {
-        void Register<T>()
-            where T:IViewModelFactory;
-    }
+    void Register<T>()
+        where T : IViewModelFactory;
 }

@@ -4,92 +4,90 @@ using System.Linq;
 using DynamicData.Kernel;
 using TailBlazer.Domain.Formatting;
 
-namespace TailBlazer.Infrastucture.Virtualisation
+namespace TailBlazer.Infrastucture.Virtualisation;
+
+public static class TextScrollEx
 {
-    public static class TextScrollEx
+    public static string Virtualise(this string source, TextScrollInfo scroll)
     {
-        public static string Virtualise(this string source, TextScrollInfo scroll)
+        if(scroll == null || scroll.TotalChars == 0)
+            return source;
+
+        return new string(source.Skip(scroll.FirstIndex).Take(scroll.TotalChars).ToArray());
+    }
+
+    public static IEnumerable<DisplayText> Virtualise(this IEnumerable<DisplayText> source, TextScrollInfo scroll)
+    {
+        var items = source.AsArray();
+
+        if(scroll == null || scroll.TotalChars == 0)
+            return items;
+
+        // var list = new List<DisplayText>(items.Length);
+        var lastIndex = scroll.FirstIndex + scroll.TotalChars;
+
+        var displayBounds = items.Aggregate(new List<DisplayWithIndex>(), (state, latest) =>
         {
-            if (scroll == null || scroll.TotalChars == 0)
-                return source;
-
-            return new string(source.Skip(scroll.FirstIndex).Take(scroll.TotalChars).ToArray());
-        }
-
-        public static IEnumerable<DisplayText> Virtualise(this IEnumerable<DisplayText> source, TextScrollInfo scroll)
-        {
-            var items = source.AsArray();
-
-            if (scroll == null || scroll.TotalChars == 0)
-                return items;
-            
-            // var list = new List<DisplayText>(items.Length);
-            int lastIndex = scroll.FirstIndex + scroll.TotalChars;
-
-            var displayBounds = items.Aggregate(new List<DisplayWithIndex>(), (state, latest) =>
+            if(state.Count == 0)
             {
-            
-                if (state.Count == 0)
+                state.Add(new DisplayWithIndex(latest, 0));
+            }
+            else
+            {
+                var last = state.Last();
+                state.Add(new DisplayWithIndex(latest, last.StartIndex + last.Text.Length));
+            }
+
+            return state;
+        }).ToArray();
+
+        var result = displayBounds
+            .Select(item =>
+            {
+                if(item.Inbounds(scroll.FirstIndex, lastIndex))
                 {
-                    state.Add( new DisplayWithIndex(latest, 0));
+                    //clip it and yield
+                    return item.Clip(scroll.FirstIndex, lastIndex);
                 }
-                else
-                {
-                    var last = state.Last();
-                    state.Add(new DisplayWithIndex(latest, last.StartIndex + last.Text.Length));
-                }
 
-                return state;
-            }).ToArray();
+                return null;
+            }).Where(item => item != null)
+            .ToArray();
 
-            var result = displayBounds
-                .Select(item =>
-                {
-                    if (item.Inbounds(scroll.FirstIndex, lastIndex))
-                    {
-                        //clip it and yield
-                        return item.Clip(scroll.FirstIndex, lastIndex);
-                    }
-                    return null;
-                }).Where(item => item != null)
-                .ToArray();
+        return result;
+    }
 
-            return result;
-        }
+    private class DisplayWithIndex
+    {
+        public DisplayText Text { get; }
+        public int StartIndex { get; }
 
-        private class DisplayWithIndex
+        public int EndIndex => StartIndex + Text.Length;
+
+        public DisplayWithIndex(DisplayText text, int startIndex)
         {
-            public DisplayText Text { get;  }
-            public int StartIndex { get;  }
-
-            public int EndIndex => StartIndex + Text.Length;
-
-            public DisplayWithIndex(DisplayText text, int startIndex)
-            {
-                Text = text;
-                StartIndex = startIndex;
-            }
-
-            public bool Inbounds(int start, int end)
-            {
-                return start <= EndIndex && end >= StartIndex;
-            }
-
-            public  DisplayText Clip(int start, int lastIndex)
-            {
-                var clippedStart = Math.Max(start - StartIndex, 0);
-                int maxLength = lastIndex - StartIndex;
-
-                var clippedLength=  Math.Min(maxLength, Text.Length - clippedStart);
-                var clipped = Text.Text.Substring(clippedStart, clippedLength);
-                return new DisplayText(Text, clipped);
-            }
-
-            public override string ToString()
-            {
-                return $"{Text}, {StartIndex}->{EndIndex}";
-            }
+            Text = text;
+            StartIndex = startIndex;
         }
 
+        public bool Inbounds(int start, int end)
+        {
+            return start <= EndIndex && end >= StartIndex;
+        }
+
+        public DisplayText Clip(int start, int lastIndex)
+        {
+            var clippedStart = Math.Max(start - StartIndex, 0);
+            var maxLength = lastIndex - StartIndex;
+
+            var clippedLength = Math.Min(maxLength, Text.Length - clippedStart);
+            var clipped = Text.Text.Substring(clippedStart, clippedLength);
+            return new DisplayText(Text, clipped);
+        }
+
+        public override string ToString()
+        {
+            return $"{Text}, {StartIndex}->{EndIndex}";
+        }
     }
 }
