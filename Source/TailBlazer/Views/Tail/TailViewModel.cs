@@ -130,8 +130,8 @@ public class TailViewModel :AbstractNotifyPropertyChanged, ILinesVisualisation, 
         CopyPathToClipboardCommand = new RelayCommand(() => clipboardHandler.WriteToClipboard(fileWatcher.FullName));
         UnClearCommand = new RelayCommand(fileWatcher.Reset);
         ClearCommand = new RelayCommand(fileWatcher.Clear);
-        KeyAutoTail = new RelayCommand(() => { AutoTail = true; });
-        OpenSearchOptionsCommand = new RelayCommand(async () =>
+        KeyAutoTail = new RelayCommand(() => { AutoTail = !AutoTail; });
+        OpenSearchOptionsCommand = new AsyncRelayCommand(async () =>
         {
             await Task.Run(() =>
             {
