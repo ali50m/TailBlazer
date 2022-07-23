@@ -21,7 +21,8 @@ public static class MeasureEx
             FlowDirection.LeftToRight,
             new Typeface(source.FontFamily, source.FontStyle, source.FontWeight, source.FontStretch),
             source.FontSize,
-            Brushes.Black);
+            Brushes.Black,
+            VisualTreeHelper.GetDpi(source).PixelsPerDip);
 
         return new Size(formattedText.Width, formattedText.Height);
     }
