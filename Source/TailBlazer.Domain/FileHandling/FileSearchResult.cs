@@ -100,40 +100,36 @@ public class FileSearchResult :ILineProvider, IEquatable<FileSearchResult>, IHas
 
         if(page.Size == 0) yield break;
 
-        using(var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
+        using var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        using var reader = new StreamReaderExtended(stream, Encoding, false);
+        if(page.Size == 0) yield break;
+
+        foreach(var i in Enumerable.Range(page.Start, page.Size))
         {
-            using(var reader = new StreamReaderExtended(stream, Encoding, false))
+            if(i > Count - 1) continue;
+
+            var start = Matches[i];
+            var startPosition = reader.AbsolutePosition();
+
+            if(startPosition != start)
             {
-                if(page.Size == 0) yield break;
-
-                foreach(var i in Enumerable.Range(page.Start, page.Size))
-                {
-                    if(i > Count - 1) continue;
-
-                    var start = Matches[i];
-                    var startPosition = reader.AbsolutePosition();
-
-                    if(startPosition != start)
-                    {
-                        reader.DiscardBufferedData();
-                        reader.BaseStream.Seek(start, SeekOrigin.Begin);
-                    }
-
-                    startPosition = reader.AbsolutePosition();
-
-                    var line = reader.ReadLine();
-                    var endPosition = reader.AbsolutePosition();
-                    var info = new LineInfo(i + 1, i, startPosition, endPosition);
-
-                    var ontail = endPosition >= TailInfo.TailStartsAt &&
-                                 DateTime.UtcNow.Subtract(TailInfo.LastTail).TotalSeconds < 1
-                        ? DateTime.UtcNow
-                        : (DateTime?) null;
-
-                    yield return new Line(info, line, ontail);
-                }
+                reader.DiscardBufferedData();
+                reader.BaseStream.Seek(start, SeekOrigin.Begin);
             }
+
+            startPosition = reader.AbsolutePosition();
+
+            var line = reader.ReadLine();
+            var endPosition = reader.AbsolutePosition();
+            var info = new LineInfo(i + 1, i, startPosition, endPosition);
+
+            var ontail = endPosition >= TailInfo.TailStartsAt &&
+                         DateTime.UtcNow.Subtract(TailInfo.LastTail).TotalSeconds < 1
+                ? DateTime.UtcNow
+                : (DateTime?) null;
+
+            yield return new Line(info, line, ontail);
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -74,18 +74,14 @@ class FileRewriter
     {
         if(!lines.Any()) return;
 
-        using(var stream = File.Open(file, FileMode.OpenOrCreate, FileAccess.Write,
-                  FileShare.Delete | FileShare.ReadWrite))
+        using var stream = File.Open(file, FileMode.OpenOrCreate, FileAccess.Write,
+            FileShare.Delete | FileShare.ReadWrite);
+        using var sw = new StreamWriter(stream);
+        sw.BaseStream.Seek(0, SeekOrigin.End);
+        lines.ForEach(line =>
         {
-            using(var sw = new StreamWriter(stream))
-            {
-                sw.BaseStream.Seek(0, SeekOrigin.End);
-                lines.ForEach(line =>
-                {
-                    sw.WriteLine(line);
-                });
-            }
-        }
+            sw.WriteLine(line);
+        });
     }
 
     private FileReadResult ReadLines(string file, long firstPosition)

@@ -60,51 +60,47 @@ public sealed class FileSegmenter
 
     private IEnumerable<FileSegment> LoadSegments()
     {
-        using(var stream = File.Open(_info.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
+        using var stream = File.Open(_info.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        var fileLength = stream.Length;
+
+        stream.Seek(0, SeekOrigin.Begin);
+        using var reader = new StreamReaderExtended(stream, true);
+        if(reader.EndOfStream || fileLength == 0)
         {
-            var fileLength = stream.Length;
-
-            stream.Seek(0, SeekOrigin.Begin);
-            using(var reader = new StreamReaderExtended(stream, true))
-            {
-                if(reader.EndOfStream || fileLength == 0)
-                {
-                    yield return new FileSegment(0, 0, 0, FileSegmentType.Tail);
-                    yield break;
-                }
-
-                if(fileLength < _initialTail)
-                {
-                    yield return new FileSegment(0, 0, fileLength, FileSegmentType.Tail);
-                    yield break;
-                }
-
-                var headStartsAt = reader.FindNextEndOfLinePosition(fileLength - _initialTail);
-                long currentEnfOfPage = 0;
-                long previousEndOfPage = 0;
-
-                var index = 0;
-                do
-                {
-                    var approximateEndOfPage = currentEnfOfPage + _segmentSize;
-                    if(approximateEndOfPage >= headStartsAt)
-                    {
-                        yield return new FileSegment(index, previousEndOfPage, headStartsAt, FileSegmentType.Head);
-                        break;
-                    }
-
-                    currentEnfOfPage = reader.FindNextEndOfLinePosition(approximateEndOfPage);
-                    yield return new FileSegment(index, previousEndOfPage, currentEnfOfPage, FileSegmentType.Head);
-
-                    index++;
-                    previousEndOfPage = currentEnfOfPage;
-                } while(true);
-
-
-                index++;
-                yield return new FileSegment(index, headStartsAt, fileLength, FileSegmentType.Tail);
-            }
+            yield return new FileSegment(0, 0, 0, FileSegmentType.Tail);
+            yield break;
         }
+
+        if(fileLength < _initialTail)
+        {
+            yield return new FileSegment(0, 0, fileLength, FileSegmentType.Tail);
+            yield break;
+        }
+
+        var headStartsAt = reader.FindNextEndOfLinePosition(fileLength - _initialTail);
+        long currentEnfOfPage = 0;
+        long previousEndOfPage = 0;
+
+        var index = 0;
+        do
+        {
+            var approximateEndOfPage = currentEnfOfPage + _segmentSize;
+            if(approximateEndOfPage >= headStartsAt)
+            {
+                yield return new FileSegment(index, previousEndOfPage, headStartsAt, FileSegmentType.Head);
+                break;
+            }
+
+            currentEnfOfPage = reader.FindNextEndOfLinePosition(approximateEndOfPage);
+            yield return new FileSegment(index, previousEndOfPage, currentEnfOfPage, FileSegmentType.Head);
+
+            index++;
+            previousEndOfPage = currentEnfOfPage;
+        } while(true);
+
+
+        index++;
+        yield return new FileSegment(index, headStartsAt, fileLength, FileSegmentType.Tail);
     }
 }

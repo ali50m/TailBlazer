@@ -67,39 +67,35 @@ public class IndexCollection :ILineProvider
 
         var offset = relativeIndex.LinesOffset;
 
-        using(var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
+        using var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        using var reader = new StreamReaderExtended(stream, Encoding, false);
+        //go to starting point
+        stream.Seek(relativeIndex.Start, SeekOrigin.Begin);
+        if(offset > 0)
         {
-            using(var reader = new StreamReaderExtended(stream, Encoding, false))
-            {
-                //go to starting point
-                stream.Seek(relativeIndex.Start, SeekOrigin.Begin);
-                if(offset > 0)
-                {
-                    //skip number of lines offset
-                    for(var i = 0; i < offset; i++)
-                        reader.ReadLine();
-                }
+            //skip number of lines offset
+            for(var i = 0; i < offset; i++)
+                reader.ReadLine();
+        }
 
-                //if estimate move to the next start of line
-                if(relativeIndex.IsEstimate && relativeIndex.Start != 0)
-                    reader.ReadLine();
+        //if estimate move to the next start of line
+        if(relativeIndex.IsEstimate && relativeIndex.Start != 0)
+            reader.ReadLine();
 
-                foreach(var i in Enumerable.Range(page.Start, page.Size))
-                {
-                    var startPosition = reader.AbsolutePosition();
-                    var line = reader.ReadLine();
-                    var endPosition = reader.AbsolutePosition();
-                    var info = new LineInfo(i + 1, i, startPosition, endPosition);
+        foreach(var i in Enumerable.Range(page.Start, page.Size))
+        {
+            var startPosition = reader.AbsolutePosition();
+            var line = reader.ReadLine();
+            var endPosition = reader.AbsolutePosition();
+            var info = new LineInfo(i + 1, i, startPosition, endPosition);
 
-                    var ontail = startPosition >= TailInfo.TailStartsAt &&
-                                 DateTime.UtcNow.Subtract(TailInfo.LastTail).TotalSeconds < 1
-                        ? DateTime.UtcNow
-                        : (DateTime?) null;
+            var ontail = startPosition >= TailInfo.TailStartsAt &&
+                         DateTime.UtcNow.Subtract(TailInfo.LastTail).TotalSeconds < 1
+                ? DateTime.UtcNow
+                : (DateTime?) null;
 
-                    yield return new Line(info, line, ontail);
-                }
-            }
+            yield return new Line(info, line, ontail);
         }
     }
 
@@ -110,36 +106,32 @@ public class IndexCollection :ILineProvider
 
         //scroll from specified position
 
-        using(var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
+        using var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        var taken = 0;
+        using var reader = new StreamReaderExtended(stream, Encoding, false);
+        var startPosition = scroll.Position;
+        var first = (int) CalculateIndexByPositon(startPosition);
+        reader.BaseStream.Seek(startPosition, SeekOrigin.Begin);
+
+        do
         {
-            var taken = 0;
-            using(var reader = new StreamReaderExtended(stream, Encoding, false))
-            {
-                var startPosition = scroll.Position;
-                var first = (int) CalculateIndexByPositon(startPosition);
-                reader.BaseStream.Seek(startPosition, SeekOrigin.Begin);
+            var line = reader.ReadLine();
+            if(line == null) yield break;
 
-                do
-                {
-                    var line = reader.ReadLine();
-                    if(line == null) yield break;
+            var endPosition = reader.AbsolutePosition();
 
-                    var endPosition = reader.AbsolutePosition();
+            var info = new LineInfo(first + taken + 1, first + taken, startPosition, endPosition);
+            var ontail = endPosition >= TailInfo.TailStartsAt &&
+                         DateTime.UtcNow.Subtract(TailInfo.LastTail).TotalSeconds < 1
+                ? DateTime.UtcNow
+                : (DateTime?) null;
 
-                    var info = new LineInfo(first + taken + 1, first + taken, startPosition, endPosition);
-                    var ontail = endPosition >= TailInfo.TailStartsAt &&
-                                 DateTime.UtcNow.Subtract(TailInfo.LastTail).TotalSeconds < 1
-                        ? DateTime.UtcNow
-                        : (DateTime?) null;
+            yield return new Line(info, line, ontail);
 
-                    yield return new Line(info, line, ontail);
-
-                    startPosition = endPosition;
-                    taken++;
-                } while(taken < scroll.PageSize);
-            }
-        }
+            startPosition = endPosition;
+            taken++;
+        } while(taken < scroll.PageSize);
     }
 
     private Page GetPage(ScrollRequest scroll)

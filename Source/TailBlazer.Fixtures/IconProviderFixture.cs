@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using FluentAssertions;
 using TailBlazer.Views.Formatting;
 using Xunit;
@@ -10,11 +10,9 @@ public class IconProviderFixture
     [Fact]
     public void IconProviderShouldHaveIcons()
     {
-        using(var provider = new IconProvider(new DefaultIconSelector()))
-        {
-            var result = provider.Icons;
+        using var provider = new IconProvider(new DefaultIconSelector());
+        var result = provider.Icons;
 
-            result.Items.Any().Should().BeTrue();
-        }
+        result.Items.Any().Should().BeTrue();
     }
 }

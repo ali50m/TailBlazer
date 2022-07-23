@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -17,8 +17,7 @@ public class StartFromFixture
 
         var scheduler = new TestScheduler();
 
-        using(var file = new TestFile())
-
+        using var file = new TestFile();
         using(file.Info
                   .WatchFile(scheduler: scheduler)
                   .ScanFrom(0, scheduler: scheduler)
@@ -38,8 +37,7 @@ public class StartFromFixture
 
         var scheduler = new TestScheduler();
 
-        using(var file = new TestFile())
-
+        using var file = new TestFile();
         using(file.Info
                   .WatchFile(scheduler: scheduler)
                   .ScanFrom(10000, scheduler: scheduler)
@@ -65,7 +63,7 @@ public class StartFromFixture
 
         var scheduler = new TestScheduler();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
         using(file.Info
                   .WatchFile(scheduler: scheduler)
                   .ScanFrom(0, scheduler: scheduler)
@@ -93,7 +91,7 @@ public class StartFromFixture
 
         var scheduler = new TestScheduler();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
         using(file.Info
                   .WatchFile(scheduler: scheduler)
                   .ScanFrom(startPosition, scheduler: scheduler)
@@ -129,7 +127,7 @@ public class StartFromFixture
 
         var scheduler = new TestScheduler();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
         using(file.Info
                   .WatchFile(scheduler: scheduler)
                   .ScanFrom(startPosition, scheduler: scheduler)
@@ -162,7 +160,7 @@ public class StartFromFixture
 
         var scheduler = new TestScheduler();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
         using(file.Info
                   .WatchFile(scheduler: scheduler)
                   .ScanFrom(0, scheduler: scheduler)

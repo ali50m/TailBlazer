@@ -154,30 +154,28 @@ public class FileSearcher :IDisposable
     private FileSegmentSearchResult Search(long start, long end)
     {
         long lastPosition = 0;
-        using(var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
+        using var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        if(stream.Length < start)
         {
-            if(stream.Length < start)
-            {
-                start = 0;
-                end = stream.Length;
-            }
-
-            long[] lines;
-            using(var reader = new StreamReaderExtended(stream, true))
-            {
-                stream.Seek(start, SeekOrigin.Begin);
-                if(reader.EndOfStream)
-                    return new FileSegmentSearchResult(start, end);
-
-                lines = reader.SearchLines(_predicate, i => i, (line, position) =>
-                {
-                    lastPosition = position; //this is end of line po
-                    return end != -1 && lastPosition > end;
-                }).ToArray();
-            }
-
-            return new FileSegmentSearchResult(start, lastPosition, lines);
+            start = 0;
+            end = stream.Length;
         }
+
+        long[] lines;
+        using(var reader = new StreamReaderExtended(stream, true))
+        {
+            stream.Seek(start, SeekOrigin.Begin);
+            if(reader.EndOfStream)
+                return new FileSegmentSearchResult(start, end);
+
+            lines = reader.SearchLines(_predicate, i => i, (line, position) =>
+            {
+                lastPosition = position; //this is end of line po
+                return end != -1 && lastPosition > end;
+            }).ToArray();
+        }
+
+        return new FileSegmentSearchResult(start, lastPosition, lines);
     }
 }

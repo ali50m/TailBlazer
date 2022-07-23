@@ -19,21 +19,19 @@ public class FileSearchFixture
     {
         var pulse = new Subject<Unit>();
         var scheduler = new TestScheduler();
-        using(var file = new TestFile())
-        {
-            FileSearchResult fileSearchResult = null;
+        using var file = new TestFile();
+        FileSearchResult fileSearchResult = null;
 
-            using(file.Info
-                      .Search(str => str.Contains("9"), scheduler)
-                      .Subscribe(x => fileSearchResult = x))
-            {
-                scheduler.AdvanceByMilliSeconds(250);
-                pulse.Once();
-                fileSearchResult.Segments.Should().Be(1);
-                fileSearchResult.SegmentsCompleted.Should().Be(0);
-                fileSearchResult.IsSearching.Should().Be(false);
-                fileSearchResult.Count.Should().Be(0);
-            }
+        using(file.Info
+                  .Search(str => str.Contains("9"), scheduler)
+                  .Subscribe(x => fileSearchResult = x))
+        {
+            scheduler.AdvanceByMilliSeconds(250);
+            pulse.Once();
+            fileSearchResult.Segments.Should().Be(1);
+            fileSearchResult.SegmentsCompleted.Should().Be(0);
+            fileSearchResult.IsSearching.Should().Be(false);
+            fileSearchResult.Count.Should().Be(0);
         }
     }
 
@@ -42,18 +40,16 @@ public class FileSearchFixture
     {
         var pulse = new Subject<Unit>();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
+        file.Delete();
+
+        FileSearchResult fileSearchResult = null;
+
+        using(file.Info.WatchFile(pulse)
+                  .Search(str => str.Contains("9"))
+                  .Subscribe(x => fileSearchResult = x))
         {
-            file.Delete();
-
-            FileSearchResult fileSearchResult = null;
-
-            using(file.Info.WatchFile(pulse)
-                      .Search(str => str.Contains("9"))
-                      .Subscribe(x => fileSearchResult = x))
-            {
-                fileSearchResult.Should().BeNull();
-            }
+            fileSearchResult.Should().BeNull();
         }
     }
 
@@ -63,21 +59,19 @@ public class FileSearchFixture
     {
         var pulse = new Subject<Unit>();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
+        file.Delete();
+
+        FileSearchResult fileSearchResult = null;
+
+        using(file.Info.WatchFile(pulse)
+                  .Search(str => str.Contains("9"))
+                  .Subscribe(x => fileSearchResult = x))
         {
-            file.Delete();
-
-            FileSearchResult fileSearchResult = null;
-
-            using(file.Info.WatchFile(pulse)
-                      .Search(str => str.Contains("9"))
-                      .Subscribe(x => fileSearchResult = x))
-            {
-                fileSearchResult.Should().Be(FileSearchResult.None);
-                file.Create();
-                pulse.Once();
-                fileSearchResult.Should().NotBe(FileSearchResult.None);
-            }
+            fileSearchResult.Should().Be(FileSearchResult.None);
+            file.Create();
+            pulse.Once();
+            fileSearchResult.Should().NotBe(FileSearchResult.None);
         }
     }
 
@@ -86,20 +80,18 @@ public class FileSearchFixture
     {
         var pulse = new Subject<Unit>();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
+        FileSearchResult fileSearchResult = null;
+
+
+        using(file.Info.WatchFile(pulse)
+                  .Search(str => str.Contains("9"))
+                  .Subscribe(x => fileSearchResult = x))
         {
-            FileSearchResult fileSearchResult = null;
-
-
-            using(file.Info.WatchFile(pulse)
-                      .Search(str => str.Contains("9"))
-                      .Subscribe(x => fileSearchResult = x))
-            {
-                file.Append(Enumerable.Range(1, 100).Select(i => i.ToString()).ToArray());
-                pulse.Once();
-                pulse.Once();
-                fileSearchResult.Matches.Length.Should().NotBe(0);
-            }
+            file.Append(Enumerable.Range(1, 100).Select(i => i.ToString()).ToArray());
+            pulse.Once();
+            pulse.Once();
+            fileSearchResult.Matches.Length.Should().NotBe(0);
         }
     }
 
@@ -108,19 +100,17 @@ public class FileSearchFixture
     {
         var scheduler = new TestScheduler();
 
-        using(var file = new TestFile())
-        {
-            FileSearchResult fileSearchResult = null;
+        using var file = new TestFile();
+        FileSearchResult fileSearchResult = null;
 
-            using(file.Info.WatchFile(scheduler: scheduler)
-                      .Search(str => str.Contains("9"))
-                      .Subscribe(x => fileSearchResult = x))
-            {
-                scheduler.AdvanceBy(1);
-                file.Append(Enumerable.Range(1, 100).Select(i => i.ToString()).ToArray());
-                scheduler.AdvanceByMilliSeconds(250);
-                fileSearchResult.Matches.Length.Should().Be(19);
-            }
+        using(file.Info.WatchFile(scheduler: scheduler)
+                  .Search(str => str.Contains("9"))
+                  .Subscribe(x => fileSearchResult = x))
+        {
+            scheduler.AdvanceBy(1);
+            file.Append(Enumerable.Range(1, 100).Select(i => i.ToString()).ToArray());
+            scheduler.AdvanceByMilliSeconds(250);
+            fileSearchResult.Matches.Length.Should().Be(19);
         }
     }
 
@@ -130,26 +120,24 @@ public class FileSearchFixture
         var scheduler = new TestScheduler();
         var pulse = new Subject<Unit>();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
+        FileSearchResult fileSearchResult = null;
+        file.Append(Enumerable.Range(1, 100).Select(i => i.ToString()).ToArray());
+
+        using(file.Info.WatchFile(pulse)
+                  .Search(str => str.Contains("9"), scheduler)
+                  .Subscribe(x => fileSearchResult = x))
         {
-            FileSearchResult fileSearchResult = null;
-            file.Append(Enumerable.Range(1, 100).Select(i => i.ToString()).ToArray());
+            pulse.Once();
+            fileSearchResult.Matches.Length.Should().Be(19);
 
-            using(file.Info.WatchFile(pulse)
-                      .Search(str => str.Contains("9"), scheduler)
-                      .Subscribe(x => fileSearchResult = x))
-            {
-                pulse.Once();
-                fileSearchResult.Matches.Length.Should().Be(19);
+            file.Append(new[] {"9", "20"});
+            pulse.Once();
+            fileSearchResult.Matches.Length.Should().Be(20);
 
-                file.Append(new[] {"9", "20"});
-                pulse.Once();
-                fileSearchResult.Matches.Length.Should().Be(20);
-
-                file.Append(new[] {"9999"});
-                pulse.Once();
-                fileSearchResult.Matches.Length.Should().Be(21);
-            }
+            file.Append(new[] {"9999"});
+            pulse.Once();
+            fileSearchResult.Matches.Length.Should().Be(21);
         }
     }
 
@@ -158,26 +146,24 @@ public class FileSearchFixture
         var scheduler = new TestScheduler();
         var pulse = new Subject<Unit>();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
+        FileSearchResult fileSearchResult = null;
+        file.Append(Enumerable.Range(1, 100).Select(i => i.ToString()).ToArray());
+
+        using(file.Info.WatchFile(pulse)
+                  .Search(str => str.Contains("9"), scheduler)
+                  .Subscribe(x => fileSearchResult = x))
         {
-            FileSearchResult fileSearchResult = null;
-            file.Append(Enumerable.Range(1, 100).Select(i => i.ToString()).ToArray());
+            pulse.Once();
+            fileSearchResult.Matches.Length.Should().Be(19);
 
-            using(file.Info.WatchFile(pulse)
-                      .Search(str => str.Contains("9"), scheduler)
-                      .Subscribe(x => fileSearchResult = x))
-            {
-                pulse.Once();
-                fileSearchResult.Matches.Length.Should().Be(19);
+            file.Append(new[] {"9", "20"});
+            pulse.Once();
+            fileSearchResult.Matches.Length.Should().Be(20);
 
-                file.Append(new[] {"9", "20"});
-                pulse.Once();
-                fileSearchResult.Matches.Length.Should().Be(20);
-
-                file.Append(new[] {"9999"});
-                pulse.Once();
-                fileSearchResult.Matches.Length.Should().Be(21);
-            }
+            file.Append(new[] {"9999"});
+            pulse.Once();
+            fileSearchResult.Matches.Length.Should().Be(21);
         }
     }
 
@@ -187,27 +173,25 @@ public class FileSearchFixture
         var scheduler = new TestScheduler();
         var pulse = new Subject<Unit>();
 
-        using(var file = new TestFile())
+        using var file = new TestFile();
+        IEnumerable<Line> lines = null;
+        file.Append(Enumerable.Range(1, 100000).Select(i => i.ToString()).ToArray());
+
+        using(file.Info.WatchFile(pulse)
+                  .Search(str => str.Contains("9"), scheduler)
+                  .Select(result => file.Info.ReadLinesByPosition(result.Matches).ToArray())
+                  .Subscribe(x => lines = x))
         {
-            IEnumerable<Line> lines = null;
-            file.Append(Enumerable.Range(1, 100000).Select(i => i.ToString()).ToArray());
+            pulse.Once();
+            // fileSearchResult.Matches.Length.Should().Be(19);
 
-            using(file.Info.WatchFile(pulse)
-                      .Search(str => str.Contains("9"), scheduler)
-                      .Select(result => file.Info.ReadLinesByPosition(result.Matches).ToArray())
-                      .Subscribe(x => lines = x))
-            {
-                pulse.Once();
-                // fileSearchResult.Matches.Length.Should().Be(19);
+            file.Append(new[] {"9", "20"});
+            pulse.Once();
+            //  fileSearchResult.Matches.Length.Should().Be(20);
 
-                file.Append(new[] {"9", "20"});
-                pulse.Once();
-                //  fileSearchResult.Matches.Length.Should().Be(20);
-
-                file.Append(new[] {"9999"});
-                pulse.Once();
-                //   fileSearchResult.Matches.Length.Should().Be(21);
-            }
+            file.Append(new[] {"9999"});
+            pulse.Once();
+            //   fileSearchResult.Matches.Length.Should().Be(21);
         }
     }
 }

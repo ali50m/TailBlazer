@@ -62,14 +62,10 @@ public static class FileInfoEx
     /// <returns></returns>
     public static Encoding GetEncoding(this FileInfo source)
     {
-        using(var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
-        {
-            using(var reader = new StreamReaderExtended(stream, true))
-            {
-                return reader.CurrentEncoding;
-            }
-        }
+        using var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        using var reader = new StreamReaderExtended(stream, true);
+        return reader.CurrentEncoding;
     }
 
 
@@ -80,56 +76,48 @@ public static class FileInfoEx
     /// <returns></returns>
     public static int FindDelimiter(this FileInfo source)
     {
-        using(var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
+        using var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        using var reader = new StreamReaderExtended(stream, Encoding.Default, true);
+        if(reader.EndOfStream)
+            return -1;
+        do
         {
-            using(var reader = new StreamReaderExtended(stream, Encoding.Default, true))
+            var ch = (char) reader.Read();
+
+            // Note the following common line feed chars: 
+            // \n - UNIX   \r\n - DOS   \r - Mac 
+            switch(ch)
             {
-                if(reader.EndOfStream)
-                    return -1;
-                do
-                {
-                    var ch = (char) reader.Read();
-
-                    // Note the following common line feed chars: 
-                    // \n - UNIX   \r\n - DOS   \r - Mac 
-                    switch(ch)
-                    {
-                        case '\r':
-                            var next = (char) reader.Peek();
-                            //with \n is WINDOWS delimiter. Otherwise mac
-                            return next == '\n' ? 2 : 1;
-                        case '\n':
-                            return 1;
-                    }
-                } while(!reader.EndOfStream);
-
-                return -1;
+                case '\r':
+                    var next = (char) reader.Peek();
+                    //with \n is WINDOWS delimiter. Otherwise mac
+                    return next == '\n' ? 2 : 1;
+                case '\n':
+                    return 1;
             }
-        }
+        } while(!reader.EndOfStream);
+
+        return -1;
     }
 
     [Obsolete("Obsolete")]
     public static IEnumerable<Line> ReadLinesByPosition(this FileInfo source, long[] positions,
         Func<int, bool> isEndOfTail = null)
     {
-        using(var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
+        using var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        using var reader = new StreamReaderExtended(stream, Encoding.Default, true);
+        foreach(var position in positions)
         {
-            using(var reader = new StreamReaderExtended(stream, Encoding.Default, true))
+            if(reader.AbsolutePosition() != position)
             {
-                foreach(var position in positions)
-                {
-                    if(reader.AbsolutePosition() != position)
-                    {
-                        reader.DiscardBufferedData();
-                        stream.Seek(position, SeekOrigin.Begin);
-                    }
-
-                    var line = reader.ReadLine();
-                    yield return new Line((int) position, line, null);
-                }
+                reader.DiscardBufferedData();
+                stream.Seek(position, SeekOrigin.Begin);
             }
+
+            var line = reader.ReadLine();
+            yield return new Line((int) position, line, null);
         }
     }
 
@@ -144,10 +132,8 @@ public static class FileInfoEx
 
     public static long GetFileLength(this FileInfo source)
     {
-        using(var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
-        {
-            return stream.Length;
-        }
+        using var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        return stream.Length;
     }
 }

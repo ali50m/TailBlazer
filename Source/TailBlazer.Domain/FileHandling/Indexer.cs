@@ -146,41 +146,39 @@ public class Indexer :IDisposable
     {
         var count = 0;
         long lastPosition = 0;
-        using(var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
-                  FileShare.Delete | FileShare.ReadWrite))
+        using var stream = File.Open(Info.FullName, FileMode.Open, FileAccess.Read,
+            FileShare.Delete | FileShare.ReadWrite);
+        long[] lines;
+        using(var reader = new StreamReaderExtended(stream, Encoding, false))
         {
-            long[] lines;
-            using(var reader = new StreamReaderExtended(stream, Encoding, false))
-            {
-                var currentPosition = reader.AbsolutePosition();
-                if(currentPosition != start)
-                    stream.Seek(start, SeekOrigin.Begin);
-                if(reader.EndOfStream) return null;
+            var currentPosition = reader.AbsolutePosition();
+            if(currentPosition != start)
+                stream.Seek(start, SeekOrigin.Begin);
+            if(reader.EndOfStream) return null;
 
-                lines = ScanLines(reader, compression, i => i, (line, position) =>
+            lines = ScanLines(reader, compression, i => i, (line, position) =>
+            {
+                var shouldBreak = end != -1 && lastPosition >= end;
+                if(!shouldBreak)
                 {
-                    var shouldBreak = end != -1 && lastPosition >= end;
-                    if(!shouldBreak)
-                    {
-                        //do not count the last line as this will take us one line over
-                        lastPosition = position;
-                        count++;
-                    }
+                    //do not count the last line as this will take us one line over
+                    lastPosition = position;
+                    count++;
+                }
 
-                    return shouldBreak;
-                }).ToArray();
-            }
-
-            if(end != -1 && lastPosition > end)
-            {
-                count--;
-                lastPosition = end;
-                lines = lines.Take(lines.Length - 1).ToArray();
-            }
-
-            return new Index(start, lastPosition, lines, compression, count,
-                end == -1 ? IndexType.Tail : IndexType.Page);
+                return shouldBreak;
+            }).ToArray();
         }
+
+        if(end != -1 && lastPosition > end)
+        {
+            count--;
+            lastPosition = end;
+            lines = lines.Take(lines.Length - 1).ToArray();
+        }
+
+        return new Index(start, lastPosition, lines, compression, count,
+            end == -1 ? IndexType.Tail : IndexType.Page);
     }
 
     private static IEnumerable<T> ScanLines<T>(StreamReaderExtended source,
