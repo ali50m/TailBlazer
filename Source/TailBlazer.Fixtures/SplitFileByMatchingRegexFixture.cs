@@ -17,11 +17,10 @@ namespace TailBlazer.Fixtures
         [Fact]
         public void Test()
         {
-
             var input = "The lazy cat could not catch a mouse";
             var pattern = "lazy|mouse";
             var matches = Regex.Matches(input, pattern);
-           
+
             Console.WriteLine(matches);
 
             //var matched = input.MatchString("Cats").ToArray();
@@ -37,12 +36,9 @@ namespace TailBlazer.Fixtures
         [Fact]
         public void FindMatchingText()
         {
-
             var input = "The lazy cat could not catch a mouse";
 
-
-
-            var matched = input.MatchString("Cats" ).ToArray();
+            var matched = input.MatchString("Cats").ToArray();
             var joined = matched.Select(m => m.Part).ToDelimited("");
             joined.Should().Be(input);
 
@@ -106,6 +102,5 @@ namespace TailBlazer.Fixtures
         //    var multijoined = multimatched.Select(m => m.Part).ToDelimited("");
         //    multijoined.Should().Be(input);
         //}
-
     }
 }

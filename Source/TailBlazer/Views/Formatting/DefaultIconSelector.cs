@@ -6,11 +6,11 @@ using TailBlazer.Domain.FileHandling.Search;
 
 namespace TailBlazer.Views.Formatting
 {
-    public sealed class DefaultIconSelector: IDefaultIconSelector
+    public sealed class DefaultIconSelector :IDefaultIconSelector
     {
         private string RegEx { get; } = PackIconKind.Regex.ToString();
         private string Search { get; } = PackIconKind.Magnify.ToString();
-        
+
         private IEnumerable<DefaultIcons> DefaultMatches { get; }
 
         public DefaultIconSelector()
@@ -34,11 +34,10 @@ namespace TailBlazer.Views.Formatting
                 .FirstOrDefault(icon => icon.IconName.Equals(iconKind, StringComparison.OrdinalIgnoreCase));
 
 
-            if (existing != null)
+            if(existing != null)
                 return existing.IconName;
 
             return GetIconFor(text, useRegex);
-
         }
 
         private IEnumerable<DefaultIcons> LoadIcons()
@@ -47,7 +46,7 @@ namespace TailBlazer.Views.Formatting
             yield return new DefaultIcons("INFO", PackIconKind.InformationOutline.ToString());
             yield return new DefaultIcons("WARN", PackIconKind.AlertOutline.ToString());
             yield return new DefaultIcons("WARNING", PackIconKind.AlertOutline.ToString());
-            yield return new DefaultIcons("ERROR", PackIconKind.SquareInc.ToString());
+            yield return new DefaultIcons("ERROR", PackIconKind.ErrorOutline.ToString());
             yield return new DefaultIcons("FATAL", PackIconKind.ExitToApp.ToString());
 
             yield return new DefaultIcons("BANK", PackIconKind.Bank.ToString());
@@ -69,7 +68,7 @@ namespace TailBlazer.Views.Formatting
             public string Text { get; }
             public string IconName { get; }
             public bool MatchTextOnCase { get; }
-            
+
             public DefaultIcons(string text, string iconName, bool matchTextOnCase = false)
             {
                 Text = text;

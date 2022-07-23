@@ -1,4 +1,4 @@
-﻿#region Usings
+#region Usings
 
 using System;
 using FluentAssertions;
@@ -18,14 +18,15 @@ namespace TailBlazer.Fixtures
             var converter = new StateBucketConverter();
             var buckets = new[]
             {
-                new StateBucket("TestType1","123",new State(1,"SomeThingOrOther"), DateTime.UtcNow.AddMinutes(-1)),
-                new StateBucket("TestType2","124",new State(1,"Type 2 State"), DateTime.UtcNow)
+                new StateBucket("TestType1", "123", new State(1, "SomeThingOrOther"),
+                    DateTime.UtcNow.AddMinutes(-1)),
+                new StateBucket("TestType2", "124", new State(1, "Type 2 State"), DateTime.UtcNow)
             };
-            
+
             var state = converter.Convert(buckets);
             var restored = converter.Convert(state);
-            buckets.ShouldBeEquivalentTo(restored);
-       }
+            buckets.Should().BeEquivalentTo(restored);
+        }
 
         //[Fact]
         //public void WriteComplexState()

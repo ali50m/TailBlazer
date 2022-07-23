@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +8,7 @@ using TailBlazer.Domain.FileHandling.Search;
 
 namespace TailBlazer.Domain.Formatting
 {
-
-    public class MatchedStringEnumerator2 : IEnumerable<MatchedString>
+    public class MatchedStringEnumerator2 :IEnumerable<MatchedString>
     {
         private readonly string _input;
         private readonly IEnumerable<string> _itemsToMatch;
@@ -24,13 +23,12 @@ namespace TailBlazer.Domain.Formatting
 
         public IEnumerator<MatchedString> GetEnumerator()
         {
-
             var strings = _itemsToMatch.AsArray();
             var matches = new MatchedString[0];
-            for (int i = 0; i < strings.Length; i++)
+            for(var i = 0; i < strings.Length; i++)
             {
                 var stringToMatch = strings[i];
-                if (i == 0)
+                if(i == 0)
                 {
                     matches = Yield(_input, stringToMatch).ToArray();
                 }
@@ -41,33 +39,38 @@ namespace TailBlazer.Domain.Formatting
                         : Yield(ms.Part, stringToMatch)).ToArray();
                 }
             }
-            foreach (var matchedString in matches)
+
+            foreach(var matchedString in matches)
             {
                 yield return matchedString;
             }
         }
 
-        private  IEnumerable<MatchedString> Yield(string input, string tomatch)
+        IEnumerator IEnumerable.GetEnumerator()
         {
+            return GetEnumerator();
+        }
 
-            if (string.IsNullOrEmpty(input))
+        private IEnumerable<MatchedString> Yield(string input, string tomatch)
+        {
+            if(string.IsNullOrEmpty(input))
                 yield break;
 
-            string pattern = "(" + Regex.Escape(tomatch) + ")";
+            var pattern = "(" + Regex.Escape(tomatch) + ")";
             var split = Regex.Split(input, pattern, RegexOptions.IgnoreCase);
             var length = split.Length;
 
-            if (length == 0) yield break;
+            if(length == 0) yield break;
 
-            if (length == 1)
+            if(length == 1)
             {
                 yield return new MatchedString(input);
                 yield break;
             }
 
-            foreach (var item in split)
+            foreach(var item in split)
             {
-                if (item.Equals(tomatch, StringComparison.OrdinalIgnoreCase))
+                if(item.Equals(tomatch, StringComparison.OrdinalIgnoreCase))
                 {
                     yield return new MatchedString(item, _tomatch);
                 }
@@ -76,16 +79,10 @@ namespace TailBlazer.Domain.Formatting
                     yield return new MatchedString(item);
                 }
             }
-
-        }
-        
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 
-    public class MatchedStringEnumerator : IEnumerable<MatchedString>
+    public class MatchedStringEnumerator :IEnumerable<MatchedString>
     {
         private readonly string _input;
         private readonly IEnumerable<string> _itemsToMatch;
@@ -93,9 +90,10 @@ namespace TailBlazer.Domain.Formatting
 
         public MatchedStringEnumerator(string input, string textToMatch)
         {
-            if (textToMatch == null) throw new ArgumentNullException(nameof(textToMatch));
+            if(textToMatch == null) throw new ArgumentNullException(nameof(textToMatch));
             _input = input;
-            _textToMatch = textToMatch;
+            //_textToMatch = textToMatch;
+            _itemsToMatch = textToMatch.Split('|');
         }
 
         public MatchedStringEnumerator(string input, IEnumerable<string> itemsToMatch)
@@ -106,10 +104,9 @@ namespace TailBlazer.Domain.Formatting
 
         public IEnumerator<MatchedString> GetEnumerator()
         {
-
-            if (_textToMatch != null)
+            if(_textToMatch != null)
             {
-                foreach (var result in Yield(_input, _textToMatch))
+                foreach(var result in Yield(_input, _textToMatch))
                 {
                     yield return result;
                 }
@@ -118,32 +115,37 @@ namespace TailBlazer.Domain.Formatting
             {
                 var strings = _itemsToMatch.AsArray();
                 var matches = new MatchedString[0];
-                for (int i = 0; i < strings.Length; i++)
+                for(var i = 0; i < strings.Length; i++)
                 {
                     var stringToMatch = strings[i];
-                    if (i == 0)
+                    if(i == 0)
                     {
                         matches = Yield(_input, stringToMatch).ToArray();
                     }
                     else
                     {
                         matches = matches.SelectMany(ms => ms.IsMatch
-                                        ? new[] { ms }
-                                        : Yield(ms.Part, stringToMatch)).ToArray();
+                            ? new[] {ms}
+                            : Yield(ms.Part, stringToMatch)).ToArray();
                     }
                 }
-                foreach (var matchedString in matches)
+
+                foreach(var matchedString in matches)
                 {
                     yield return matchedString;
                 }
             }
+        }
 
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         private static IEnumerable<MatchedString> Yield(string input, string tomatch)
         {
-
-            if (string.IsNullOrEmpty(input))
+            if(string.IsNullOrEmpty(input))
                 yield break;
 
 
@@ -152,34 +154,34 @@ namespace TailBlazer.Domain.Formatting
 
             var length = split.Length;
 
-            if (length == 0) yield break;
+            if(length == 0) yield break;
 
-            if (length == 1)
+            if(length == 1)
             {
                 yield return new MatchedString(input);
                 yield break;
             }
 
             //  int start =0;
-            int currentLength = 0;
+            var currentLength = 0;
 
-            for (int i = 0; i < split.Length; i++)
+            for(var i = 0; i < split.Length; i++)
             {
                 var current = split[i] ?? string.Empty;
 
-                if (string.IsNullOrEmpty(current))
+                if(string.IsNullOrEmpty(current))
                 {
                     //Get original string back as the user may have searched in a different case
                     var originalString = input.Substring(currentLength, tomatch.Length);
                     yield return new MatchedString(originalString, true);
 
                     currentLength = current.Length + currentLength + tomatch.Length;
-                    if (currentLength + tomatch.Length > input.Length)
+                    if(currentLength + tomatch.Length > input.Length)
                         yield break;
                 }
-                else if (i > 0 && !string.IsNullOrEmpty(split[i - 1]))
+                else if(i > 0 && !string.IsNullOrEmpty(split[i - 1]))
                 {
-                    if (currentLength + tomatch.Length > input.Length)
+                    if(currentLength + tomatch.Length > input.Length)
                         yield break;
 
                     //Get original string back as the user may have searched in a different case
@@ -195,15 +197,7 @@ namespace TailBlazer.Domain.Formatting
                     yield return new MatchedString(current);
                     currentLength = current.Length + currentLength;
                 }
-
             }
-        }
-
-
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

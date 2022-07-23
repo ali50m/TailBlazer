@@ -4,9 +4,9 @@ using System.Threading;
 using FluentAssertions;
 using TailBlazer.Domain.FileHandling.Recent;
 using TailBlazer.Domain.Formatting;
-using Xunit;
-using TailBlazer.Views.Tail;
 using TailBlazer.Domain.Settings;
+using TailBlazer.Views.Tail;
+using Xunit;
 
 namespace TailBlazer.Fixtures
 {
@@ -15,17 +15,15 @@ namespace TailBlazer.Fixtures
         [Fact]
         public void RecentFiles()
         {
-
             var files = new[]
             {
-                new RecentFile(new FileInfo(@"C:\\File1.txt")),
-                new RecentFile(new FileInfo(@"C:\\File2.txt"))
+                new RecentFile(new FileInfo(@"C:\\File1.txt")), new RecentFile(new FileInfo(@"C:\\File2.txt"))
             };
 
             var converter = new RecentFilesToStateConverter();
             var state = converter.Convert(files);
             var restored = converter.Convert(state);
-            restored.ShouldAllBeEquivalentTo(files);
+            restored.Should().BeEquivalentTo(files);
         }
 
         [Fact]
@@ -45,7 +43,7 @@ namespace TailBlazer.Fixtures
         {
             var converter = new SearchMetadataToStateConverter();
             var state = converter.Convert(State.Empty);
-            state.ShouldAllBeEquivalentTo(converter.GetDefaultValue());
+            state.Should().BeEquivalentTo(converter.GetDefaultValue());
         }
 
         [Fact]
@@ -54,18 +52,18 @@ namespace TailBlazer.Fixtures
             var converter = new SearchMetadataToStateConverter();
             State nullState = null;
             var state = converter.Convert(nullState);
-            state.ShouldAllBeEquivalentTo(converter.GetDefaultValue());
+            state.Should().BeEquivalentTo(converter.GetDefaultValue());
         }
 
         private void SerializeAndDeserializeWithCulture(string cultureName)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo(cultureName);
 
-            var original = new GeneralOptions(Theme.Dark, false,0.5, 125,5, true, false);
+            var original = new GeneralOptions(Theme.Dark, false, 0.5, 125, 5, true, false);
             var converter = new GeneralOptionsConverter();
             var state = converter.Convert(original);
             var restored = converter.Convert(state);
-            restored.ShouldBeEquivalentTo(original);
+            restored.Should().BeEquivalentTo(original);
         }
     }
 }

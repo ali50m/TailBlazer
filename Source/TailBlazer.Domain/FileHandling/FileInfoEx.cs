@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive;
@@ -12,7 +12,7 @@ namespace TailBlazer.Domain.FileHandling
     public static class FileInfoEx
     {
         /// <summary>
-        /// A simpler alternative to the irritatingly useless FileSystemWatcher
+        ///     A simpler alternative to the irritatingly useless FileSystemWatcher
         /// </summary>
         /// <param name="file">The file to monitor</param>
         /// <param name="refreshPeriod">The refresh period.</param>
@@ -21,7 +21,7 @@ namespace TailBlazer.Domain.FileHandling
         public static IObservable<FileNotification> WatchFile(this FileInfo file, TimeSpan? refreshPeriod = null,
             IScheduler scheduler = null)
         {
-           return Observable.Create<FileNotification>(observer =>
+            return Observable.Create<FileNotification>(observer =>
             {
                 var refresh = refreshPeriod ?? TimeSpan.FromMilliseconds(250);
                 scheduler = scheduler ?? Scheduler.Default;
@@ -37,13 +37,12 @@ namespace TailBlazer.Domain.FileHandling
 
                         observer.OnNext(notification);
                     }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
                         notification = new FileNotification(file, ex);
                         observer.OnNext(notification);
                     }
                 });
-
             }).DistinctUntilChanged();
         }
 
@@ -57,16 +56,16 @@ namespace TailBlazer.Domain.FileHandling
         }
 
 
-
         /// <summary>
-        /// Determines the encoding of a file
+        ///     Determines the encoding of a file
         /// </summary>
         /// <returns></returns>
         public static Encoding GetEncoding(this FileInfo source)
         {
-            using (var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.ReadWrite))
+            using(var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
+                      FileShare.Delete | FileShare.ReadWrite))
             {
-                using (var reader = new StreamReaderExtended(stream, true))
+                using(var reader = new StreamReaderExtended(stream, true))
                 {
                     return reader.CurrentEncoding;
                 }
@@ -75,65 +74,69 @@ namespace TailBlazer.Domain.FileHandling
 
 
         /// <summary>
-        /// Finds the delimiter by looking for the first line in the file and comparing chars
+        ///     Finds the delimiter by looking for the first line in the file and comparing chars
         /// </summary>
         /// <param name="source">The source.</param>
         /// <returns></returns>
         public static int FindDelimiter(this FileInfo source)
         {
-            using (var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.ReadWrite))
+            using(var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
+                      FileShare.Delete | FileShare.ReadWrite))
             {
-                using (var reader = new StreamReaderExtended(stream, Encoding.Default, true))
+                using(var reader = new StreamReaderExtended(stream, Encoding.Default, true))
                 {
-                    if (reader.EndOfStream)
+                    if(reader.EndOfStream)
                         return -1;
                     do
                     {
-                        var ch = (char)reader.Read();
+                        var ch = (char) reader.Read();
 
                         // Note the following common line feed chars: 
                         // \n - UNIX   \r\n - DOS   \r - Mac 
-                        switch (ch)
+                        switch(ch)
                         {
                             case '\r':
-                                var next = (char)reader.Peek();
+                                var next = (char) reader.Peek();
                                 //with \n is WINDOWS delimiter. Otherwise mac
                                 return next == '\n' ? 2 : 1;
                             case '\n':
                                 return 1;
                         }
-                    } while (!reader.EndOfStream);
+                    } while(!reader.EndOfStream);
+
                     return -1;
                 }
             }
         }
 
-        public static IEnumerable<Line> ReadLinesByPosition(this FileInfo source, long[] positions, Func<int, bool> isEndOfTail = null)
+        [Obsolete("Obsolete")]
+        public static IEnumerable<Line> ReadLinesByPosition(this FileInfo source, long[] positions,
+            Func<int, bool> isEndOfTail = null)
         {
-            using (var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.ReadWrite))
+            using(var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
+                      FileShare.Delete | FileShare.ReadWrite))
             {
-                using (var reader = new StreamReaderExtended(stream, Encoding.Default, true))
+                using(var reader = new StreamReaderExtended(stream, Encoding.Default, true))
                 {
-                    foreach (var position in positions)
+                    foreach(var position in positions)
                     {
-                        if (reader.AbsolutePosition() != position)
+                        if(reader.AbsolutePosition() != position)
                         {
                             reader.DiscardBufferedData();
                             stream.Seek(position, SeekOrigin.Begin);
-
                         }
+
                         var line = reader.ReadLine();
-                        yield return new Line((int)position, line,null);
+                        yield return new Line((int) position, line, null);
                     }
                 }
             }
         }
-        
-        public static long FindNextEndOfLinePosition(this StreamReaderExtended source, long initialPosition,
-            SeekOrigin origin= SeekOrigin.Begin)
-        {
 
-            if (source.EndOfStream) return -1;
+        public static long FindNextEndOfLinePosition(this StreamReaderExtended source, long initialPosition,
+            SeekOrigin origin = SeekOrigin.Begin)
+        {
+            if(source.EndOfStream) return -1;
             source.BaseStream.Seek(initialPosition, origin);
             source.ReadLine();
             return source.AbsolutePosition();
@@ -141,7 +144,8 @@ namespace TailBlazer.Domain.FileHandling
 
         public static long GetFileLength(this FileInfo source)
         {
-            using (var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.ReadWrite))
+            using(var stream = File.Open(source.FullName, FileMode.Open, FileAccess.Read,
+                      FileShare.Delete | FileShare.ReadWrite))
             {
                 return stream.Length;
             }

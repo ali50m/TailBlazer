@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using FluentAssertions;
 using Xunit;
@@ -21,7 +21,7 @@ namespace TailBlazer.Fixtures
             long x = 1024 * 1024;
             var result = x.FormatWithAbbreviation();
 
-            result.ShouldBeEquivalentTo("1 MB");
+            result.Should().BeEquivalentTo("1 MB");
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace TailBlazer.Fixtures
         {
             var result = long.MinValue.FormatWithAbbreviation();
 
-            result.ShouldBeEquivalentTo("-9223372036854775808 B");
+            result.Should().BeEquivalentTo("-9223372036854775808 B");
         }
 
         [Fact]
@@ -37,13 +37,13 @@ namespace TailBlazer.Fixtures
         {
             var result = long.MaxValue.FormatWithAbbreviation();
 
-            result.ShouldBeEquivalentTo("8 EB");
+            result.Should().BeEquivalentTo("8 EB");
         }
 
         [Theory
-            , InlineData((long)12 * 1024 * 1024)
-            , InlineData((long)12 * 1024 * 1024 + 1234567)
-            , InlineData((long)3 * 1024 * 1024 * 1024 + 987652342)]
+         , InlineData((long) 12 * 1024 * 1024)
+         , InlineData((long) 12 * 1024 * 1024 + 1234567)
+         , InlineData((long) 3 * 1024 * 1024 * 1024 + 987652342)]
         public void FormatWithAbbreviationShouldBeEquivalentToFormatWithAbbreviationOld(long input)
         {
             var watch = new Stopwatch();
@@ -71,14 +71,15 @@ namespace TailBlazer.Fixtures
         {
             //TODO: not very efficient. Come back to this later
             //var powereof = Math.Floor(Math.Log10(source));
-            string[] sizes = { "B", "KB", "MB", "GB" };
+            string[] sizes = {"B", "KB", "MB", "GB"};
             double len = source;
-            int order = 0;
-            while (len >= 1024 && order + 1 < sizes.Length)
+            var order = 0;
+            while(len >= 1024 && order + 1 < sizes.Length)
             {
                 order++;
                 len = len / 1024;
             }
+
             return $"{len:0.##} {sizes[order]}";
         }
     }
