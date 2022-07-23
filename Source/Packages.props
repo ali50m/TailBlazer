@@ -1,29 +1,22 @@
 <Project>
     <ItemGroup>
+	    <PackageReference Update="Dragablz" Version="0.0.3.223" />
 	    <PackageReference Update="DynamicData" Version="7.9.7" />
+	    <PackageReference Update="FluentAssertions" Version="6.7.0" />
+	    <PackageReference Update="log4net" Version="2.0.14" />
+	    <PackageReference Update="MahApps.Metro" Version="2.4.9" />
+	    <PackageReference Update="MaterialDesignThemes" Version="4.5.0" />
+	    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+	    <PackageReference Update="Microsoft.Reactive.Testing" Version="5.0.0" />
+	    <PackageReference Update="StructureMap" Version="4.7.1" />
+	    <PackageReference Update="System.Reactive" Version="5.0.0" />
 	    <PackageReference Update="System.Reactive.Core" Version="5.0.0" />
 	    <PackageReference Update="System.Reactive.Interfaces" Version="5.0.0" />
 	    <PackageReference Update="System.Reactive.Linq" Version="5.0.0" />
 	    <PackageReference Update="System.Reactive.PlatformServices" Version="5.0.0" />
-	    <PackageReference Update="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-
-	    <PackageReference Update="FluentAssertions" Version="6.7.0" />
-	    <PackageReference Update="MaterialDesignThemes" Version="4.5.0" />
-	    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-	    <PackageReference Update="Microsoft.Reactive.Testing" Version="5.0.0" />
-
-	    <PackageReference Update="Dragablz" Version="0.0.3.223" />
-	    <PackageReference Update="log4net" Version="2.0.14" />
-	    <PackageReference Update="MahApps.Metro" Version="2.4.9" />
-	    <PackageReference Update="MaterialDesignThemes" Version="4.5.0" />
-	    <PackageReference Update="StructureMap" Version="4.7.1" />
-	    <PackageReference Update="System.Reactive" Version="5.0.0" />
 	    <PackageReference Update="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+	    <PackageReference Update="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
         <PackageReference Update="xunit" Version="2.4.1" />
         <PackageReference Update="xunit.runner.visualstudio" Version="2.4.5" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <!--<GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.5.103" Condition="'$(EnableGitVersioning)' != 'false'" />-->
     </ItemGroup>
 </Project>
