@@ -9,6 +9,5 @@
 	  <PackageReference Include="System.Reactive.Interfaces" />
 	  <PackageReference Include="System.Reactive.Linq" />
 	  <PackageReference Include="System.Reactive.PlatformServices" />
-	  <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
 	</ItemGroup>
 </Project>
