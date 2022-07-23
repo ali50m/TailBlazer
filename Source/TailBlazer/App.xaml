@@ -15,13 +15,20 @@
                     BaseTheme="Light"
                     PrimaryColor="Teal"
                     SecondaryColor="LightBlue" />
+
+                <!--  MahApps  -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+
+                <!--  Material Design  -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+
+                <!--  Material Design: MahApps Compatibility  -->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/materialdesigntheme.mahapps.defaults.xaml" />
+
+                <!--  Dragablz Material Design  -->
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <!--<ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/TailBlazer;component/Themes/Colours.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-            </ResourceDictionary.MergedDictionaries>-->
 
             <DataTemplate DataType="{x:Type searching:SearchOptionsViewModel}">
                 <searching:SearchOptionsView />

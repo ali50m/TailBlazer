@@ -5,17 +5,6 @@
     xmlns:controlzex="urn:controlzex"
     xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/primary/materialdesigncolor.green.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/accent/materialdesigncolor.amber.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Font.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-
     <Style BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" TargetType="{x:Type dragablz:TabablzControl}" />
     <SolidColorBrush x:Key="WindowTitleColorBrush" Color="{DynamicResource Primary700}" />
     <SolidColorBrush x:Key="IdealForegroundColorBrush" Color="{DynamicResource Primary500Foreground}" />

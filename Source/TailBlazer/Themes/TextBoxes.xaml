@@ -102,13 +102,13 @@
                     <Grid>
                         <Border
                             x:Name="border"
-                            Padding="0 4 0 4"
+                            Padding="0,4,0,4"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             SnapsToDevicePixels="True">
                             <Grid
-                                Margin="0 12 0 0"
+                                Margin="0,12,0,0"
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                 <ScrollViewer

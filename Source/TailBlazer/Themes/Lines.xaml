@@ -103,13 +103,14 @@
 
             </materialDesign:PopupBox>
 
-            <TextBlock Grid.Column="0"
-                       Opacity="0.5"
-                       TextAlignment="Right"
-                       VerticalAlignment="Center"
-                       Margin="8,0,0,0"
-                       Text="{Binding LineNumber.Value}"
-                       Visibility="{Binding Path=DataContext.GeneralOptionBindings.ShowLineNumbers.Value, ElementName=Control, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <TextBlock
+                Grid.Column="0"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+                Opacity="0.5"
+                Text="{Binding LineNumber.Value}"
+                TextAlignment="Right"
+                Visibility="{Binding Path=DataContext.GeneralOptionBindings.ShowLineNumbers.Value, ElementName=Control, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
             <Grid Grid.Column="1" Margin="16,0,0,0">
                 <controls:HighlightTextControl
