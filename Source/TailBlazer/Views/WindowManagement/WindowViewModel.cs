@@ -112,7 +112,7 @@ public class WindowViewModel :AbstractNotifyPropertyChanged, IDisposable, IViewO
             applicationStatePublisher.Publish(ApplicationState.ShuttingDown);
         };
 
-        Version = $"v{Assembly.GetEntryAssembly().GetName().Version.ToString(3)}";
+        Version = $"v{Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3)}";
 
         var fileDropped = DropMonitor.Dropped.Subscribe(OpenFile);
 
