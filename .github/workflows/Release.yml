@@ -13,9 +13,6 @@ jobs:
         os: [win]
 
     steps:
-    - name: Get Version
-      id: get_version
-      uses: battila7/get-version-action@v2.2.1
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -32,7 +29,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish -c release -o publish/${{ matrix.os }} --os ${{ matrix.os }} -p:Version=${{ steps.get_version.outputs.version-without-v }} --verbosity normal
+      run: dotnet publish -c release -o publish/${{ matrix.os }} --os ${{ matrix.os }} -p:Version=${{ steps.get-version.outputs.assembly-version }} --verbosity normal
     - name: Zip Release
       uses: TheDoctor0/zip-release@0.6.1
       with:
@@ -43,11 +40,3 @@ jobs:
       uses: softprops/action-gh-release@v0.1.14
       with:
         files: publish/*.zip
-  
-    # - uses: kzrnm/get-net-sdk-project-versions-action@v1
-    #   id: get-version
-    #   with:
-    #     proj-path: src/${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
-    # - name: echo assembly versions
-    #   run:  |
-    #         echo "${{steps.get-version.outputs.assembly-version}}" 
