@@ -48,5 +48,12 @@ jobs:
       with:
         proj-path: src/${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
     
-    - name: echo assembly version
-      run: echo "${{steps.get-version.outputs.version}}"
+    - name: echo assembly versions
+      run:  |
+            echo "${{steps.get-version.outputs.version}}"
+            echo "${{steps.get-version.outputs.version-prefix}}" 
+            echo "${{steps.get-version.outputs.version-suffix}}" 
+            echo "${{steps.get-version.outputs.package-version}}" 
+            echo "${{steps.get-version.outputs.assembly-version}}" 
+            echo "${{steps.get-version.outputs.file-version}}" 
+            echo "${{steps.get-version.outputs.informational-version}}" 
