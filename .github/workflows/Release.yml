@@ -43,9 +43,10 @@ jobs:
       with:
         files: publish/*.zip
   
-    - name: echo version
-      uses: kzrnm/get-net-sdk-project-versions-action@v1
+    - uses: kzrnm/get-net-sdk-project-versions-action@v1
       id: get-version
       with:
         proj-path: src/${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
+    
+    - name: echo version
       run: echo "${{steps.get-version.outputs.version}}"
