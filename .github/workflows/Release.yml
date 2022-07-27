@@ -48,5 +48,5 @@ jobs:
       with:
         proj-path: src/${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
     
-    - name: echo version
+    - name: echo assembly version
       run: echo "${{steps.get-version.outputs.version}}"
