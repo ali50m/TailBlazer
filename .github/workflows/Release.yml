@@ -43,3 +43,14 @@ jobs:
       with:
         files: publish/*.zip
   
+    - uses: kzrnm/get-net-sdk-project-versions-action@v1
+      id: get-version
+      with:
+        proj-path: YourProject/YourProject.csproj
+      - run: echo "${{steps.get-version.outputs.version}}"
+      - run: echo "${{steps.get-version.outputs.version-prefix}}" 
+      - run: echo "${{steps.get-version.outputs.version-suffix}}" 
+      - run: echo "${{steps.get-version.outputs.package-version}}" 
+      - run: echo "${{steps.get-version.outputs.assembly-version}}" 
+      - run: echo "${{steps.get-version.outputs.file-version}}" 
+      - run: echo "${{steps.get-version.outputs.informational-version}}" 
