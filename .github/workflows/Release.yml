@@ -3,7 +3,7 @@ name: .NET Release
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "*"
 
 jobs:
   build:
@@ -21,6 +21,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
+    - uses: kzrnm/get-net-sdk-project-versions-action@v1
+      id: get-version
+      with:
+        proj-path: src/${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -32,28 +36,18 @@ jobs:
     - name: Zip Release
       uses: TheDoctor0/zip-release@0.6.1
       with:
-        # Filename for archive
-        filename: ${{ github.event.repository.name }}-${{ matrix.os }}-${{ steps.get_version.outputs.version-without-v }}.zip
-        # Base path for archive files
+        filename: ${{ github.event.repository.name }}-${{ matrix.os }}-${{ steps.get-version.outputs.assembly-version }}.zip
         path: ${{ matrix.os }}/*
-        # Working directory before zipping
         directory: publish/
     - name: GH Release
       uses: softprops/action-gh-release@v0.1.14
       with:
         files: publish/*.zip
   
-    - uses: kzrnm/get-net-sdk-project-versions-action@v1
-      id: get-version
-      with:
-        proj-path: src/${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
-    
-    - name: echo assembly versions
-      run:  |
-            echo "${{steps.get-version.outputs.version}}"
-            echo "${{steps.get-version.outputs.version-prefix}}" 
-            echo "${{steps.get-version.outputs.version-suffix}}" 
-            echo "${{steps.get-version.outputs.package-version}}" 
-            echo "${{steps.get-version.outputs.assembly-version}}" 
-            echo "${{steps.get-version.outputs.file-version}}" 
-            echo "${{steps.get-version.outputs.informational-version}}" 
+    # - uses: kzrnm/get-net-sdk-project-versions-action@v1
+    #   id: get-version
+    #   with:
+    #     proj-path: src/${{ github.event.repository.name }}/${{ github.event.repository.name }}.csproj
+    # - name: echo assembly versions
+    #   run:  |
+    #         echo "${{steps.get-version.outputs.assembly-version}}" 
