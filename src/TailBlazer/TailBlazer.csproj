@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>tailblazer.ico</ApplicationIcon>
+		<AssemblyVersion>6.0.3</AssemblyVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ApplicationDefinition Remove="App.xaml" />
+		<Content Include="tailblazer.ico" />
+		<Page Include="App.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" />
+		<PackageReference Include="Dragablz" />
+		<PackageReference Include="log4net" />
+		<PackageReference Include="MahApps.Metro.IconPacks.Modern" />
+		<PackageReference Include="MaterialDesignThemes.MahApps" />
+		<PackageReference Include="StructureMap" />
+		<PackageReference Include="System.Reflection.Emit.Lightweight" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\TailBlazer.Domain\TailBlazer.Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Settings.Designer.cs" DesignTimeSharedInput="True" AutoGen="True" DependentUpon="Settings.settings" />
+		<None Update="Properties\Settings.settings" Generator="SettingsSingleFileGenerator" LastGenOutput="Settings.Designer.cs" />
+	</ItemGroup>
+</Project>
